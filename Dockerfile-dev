@@ -1,0 +1,14 @@
+# Image
+FROM node:alpine:18
+
+# create destination directory
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+# update and install dependency
+RUN apt update && apt upgrade -y && apt-get install -y nano
+
+# Configure host
+ENV HOST 0.0.0.0
+
+CMD [ "npm", "run", "debug" ]
