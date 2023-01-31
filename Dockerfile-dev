@@ -1,5 +1,5 @@
 # Image
-FROM node:alpine:18
+FROM node:18
 
 # create destination directory
 RUN mkdir -p /usr/src/app
