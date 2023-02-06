@@ -37,7 +37,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.render('error'); 
 });
 
 if (process.env.NODE_ENV === 'production') {
@@ -46,5 +46,4 @@ if (process.env.NODE_ENV === 'production') {
   console.log('Server started in development mode');
 }
 
-console.log("The connection url is " + process.env.DATABASE_URL);
 module.exports = app;
