@@ -3,7 +3,9 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+var dotenv = require('dotenv');
+dotenv.config();
+ 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
@@ -38,6 +40,11 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-console.log('Server started');
+if (process.env.NODE_ENV === 'production') {
+  console.log('Server started in production mode');
+} else {
+  console.log('Server started in development mode');
+}
 
+console.log("The connection url is " + process.env.DATABASE_URL);
 module.exports = app;

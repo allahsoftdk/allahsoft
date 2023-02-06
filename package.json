@@ -4,15 +4,23 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "debug": "npm install && nodemon --legacy-watch -P 1000 ./bin/www"
+    "debug": "npm install && nodemon --legacy-watch -P 1000 ./bin/www",
+    "test": "jest --verbose",
+    "test:watch": "jest --verbose --watch"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
+    "dotenv": "^16.0.3",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
     "morgan": "~1.9.1",
     "nodemon": "^2.0.20"
+  },
+  "devDependencies": {
+    "jest": "^29.4.1",
+    "prisma": "^4.9.0",
+    "supertest": "^6.3.3"
   }
 }
