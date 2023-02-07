@@ -2,13 +2,15 @@
   "name": "allahsoft",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "start": "node ./bin/www",
-    "debug": "npm install && nodemon --legacy-watch -P 1000 ./bin/www",
+    "start": "node ./bin/www.js",
+    "debug": "npm install && nodemon --legacy-watch -P 1000 ./bin/www.js",
     "test": "jest --verbose",
     "test:watch": "jest --verbose --watch"
   },
   "dependencies": {
+    "@prisma/client": "^4.9.0",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "dotenv": "^16.0.3",

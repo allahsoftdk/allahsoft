@@ -1,18 +1,21 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var dotenv = require('dotenv');
+import createError  from 'http-errors';
+import express from 'express';
+import path from 'path';
+import cookieParser from 'cookie-parser';
+import logger from 'morgan';
+import dotenv from 'dotenv';
+import {fileURLToPath} from 'url';
 dotenv.config();
- 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+
+import indexRouter from './routes/index.js';
+import usersRouter from './routes/users.js';
 
 var app = express();
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename)   
+app.set('views', path.join(__dirname, 'views')); 
 app.set('view engine', 'jade');
 
 app.use(logger('dev'));
@@ -21,7 +24,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
+app.use('/api', indexRouter);
 app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
@@ -46,4 +49,4 @@ if (process.env.NODE_ENV === 'production') {
   console.log('Server started in development mode');
 }
 
-module.exports = app;
+export default app

@@ -1,13 +1,24 @@
-var express = require('express');
+import express, { json } from 'express'
+import { PrismaClient } from '@prisma/client' 
+
 var router = express.Router();
+const prisma = new PrismaClient(); 
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+
+
+router.post('/test', async function(req, res, next) {
+  const email = req.body; 
+  const name = req.body; 
+  const te = req.body;  
+  const user = await prisma.user.create({
+    data: { 
+      email: email,
+      name: name,
+      te: te
+    }
+  });
+  res.status(200).send(user);
 });
 
-router.get('/test', function(req, res, next) {
-  res.send('test').status(200);
-});
 
-module.exports = router;
+export default router;
