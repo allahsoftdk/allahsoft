@@ -20,13 +20,14 @@ router.post('/', async (req, res, next) => {
   res.json(user);
 });
 
-router.get('/id/:id', async (req, res) => {
+router.get('/:id', async (req, res) => {
   const userId = req.params.id;
   const user = await prisma.user.findUnique({
     where: {
       id: Number(userId),
     },
   })
+  res.json(user);
 })
 
 export default router

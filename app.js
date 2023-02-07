@@ -7,8 +7,8 @@ import dotenv from 'dotenv';
 import {fileURLToPath} from 'url';
 dotenv.config();
 
-import indexRouter from './routes/index.js';
-import usersRouter from './routes/users.js';
+import indexRouter from './routes/views/index.js';
+import usersRouter from './routes/api/users.js';
 
 var app = express();
 
