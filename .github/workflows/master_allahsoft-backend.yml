@@ -25,7 +25,12 @@ jobs:
         run: |
           npm install
           npm run build --if-present
-        
+      
+      - name: Get database url from environment
+        run: |
+          touch .env
+          echo DATABASE_URL=${{env.DATABASE_URL}} >> .env
+     
       - name: run prisma migrations
         run: npx prisma migrate deploy
             
