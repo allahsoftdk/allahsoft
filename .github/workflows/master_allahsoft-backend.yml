@@ -29,7 +29,8 @@ jobs:
       - name: Get database url from environment
         run: |
           touch .env
-          echo DATABASE_URL=${{env.DATABASE_URL}} >> .env
+          echo DATABASE_URL=${{vars.DATABASE_URL}} >> .env
+          cat .env
      
       - name: run prisma migrations
         run: npx prisma migrate deploy
