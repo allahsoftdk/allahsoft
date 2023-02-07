@@ -26,10 +26,10 @@ jobs:
           npm install
           npm run build --if-present
       
-      - name: Get database url from environment
+      - name: Create .env file and get database url
         run: |
           touch .env
-          echo DATABASE_URL=${{ '${{secrets.DATABASE_URL}}' }} >> .env
+          echo DATABASE_URL=${{secrets.DATABASE_URL}} >> .env
           cat .env
      
       - name: run prisma migrations
