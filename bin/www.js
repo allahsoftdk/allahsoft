@@ -4,9 +4,9 @@
  * Module dependencies.
  */
 
-var app = require('../app');
-var debug = require('debug')('allahsoft:server');
-var http = require('http');
+import app from '../app.js';
+import debug from 'debug';'allahsoft:server';
+import http from 'http';
 
 /**
  * Get port from environment and store in Express.
@@ -14,11 +14,11 @@ var http = require('http');
 
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
-
+ 
 /**
  * Create HTTP server.
  */
-
+ 
 var server = http.createServer(app);
 
 /**

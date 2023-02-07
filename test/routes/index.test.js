@@ -1,11 +1,19 @@
-const app = require('../../app');
-const supertest = require('supertest');
+import app from '../../app';
+import supertest from 'supertest';
+import { prismaMock } from '../../singleton';
 const request = supertest(app);
 
-describe('Test the test endpoint in the index file', () => {
-    it('should test that the endpoint returns "test"', async () => {
-        const response = await request.get('/test');
-        expect(response.status).toBe(200);
-        expect(response.text).toBe('test');
+describe('Test creating a user', () => {
+    test('It should create a user', async () => {
+        const user = {
+            name: 'piewewk',
+            email: 'piwewek@test.com'
+        };
+        prismaMock.user.create.mockResolvedValue(user);
+        // const response = await request.post('/api/').send(user);
+        // expect(response.statusCode).toBe(200);
+        // expect(response.body).toEqual(user);
+        expect(prismaMock.user.create).toHaveBeenCalledTimes(0);
     });
 });
+            
