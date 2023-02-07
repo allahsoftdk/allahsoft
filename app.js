@@ -7,8 +7,8 @@ import dotenv from 'dotenv';
 import {fileURLToPath} from 'url';
 dotenv.config();
 
-import indexRouter from './routes/index.js';
-import usersRouter from './routes/users.js';
+import indexRouter from './routes/views/index.js';
+import usersRouter from './routes/api/users.js';
 
 var app = express();
 
@@ -24,8 +24,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser()); 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/api', indexRouter);
-app.use('/users', usersRouter);
+app.use('/', indexRouter);
+app.use('/api/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
