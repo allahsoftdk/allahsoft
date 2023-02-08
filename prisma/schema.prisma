@@ -23,6 +23,9 @@ model User {
   user_followers User_followers[]
   post_comments Post_comments[]
   post_likes Post_likes[]
+  chat_messages Chat_messages[]
+  chat_room_participants Chat_room_participants[]
+  roles_users Roles_users[]
 }
 
 model Prayer_alarms {
@@ -69,4 +72,42 @@ model Post_likes{
   userId   User @relation(fields: [fk_user], references: [id])
   fk_user Int
   @@id([fk_post, fk_user])
+}
+
+model Chat_rooms{
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(255)
+  chat_messages Chat_messages[]
+  chat_room_participants Chat_room_participants[]
+}
+
+model Chat_messages{
+  messages String @db.VarChar(255)
+  chat_rooms Chat_rooms @relation(fields: [fk_chat_room], references: [id])
+  fk_chat_room Int
+  userId  User @relation(fields: [fk_user], references: [id])
+  fk_user Int
+  @@id([fk_chat_room, fk_user])
+}
+
+model Chat_room_participants{
+  chat_rooms Chat_rooms @relation(fields: [fk_chat_room], references: [id])
+  fk_chat_room Int
+  userId  User @relation(fields: [fk_user], references: [id])
+  fk_user Int
+  @@id([fk_chat_room, fk_user])
+}
+
+model Roles{
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(255)
+  roles_users Roles_users[]
+}
+
+model Roles_users{
+  roles Roles @relation(fields: [fk_roles], references: [id])
+  fk_roles Int
+  userId User @relation(fields: [fk_user], references: [id])
+  fk_user Int
+  @@id([fk_roles, fk_user])
 }
