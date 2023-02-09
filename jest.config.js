@@ -1,7 +1,7 @@
-module.exports = {
+export default {
     clearMocks: true,
     preset: 'ts-jest',
     testEnvironment: 'node',
-    setupFilesAfterEnv: ['<rootDir>/singleton.ts'],
-  }
+    setupFilesAfterEnv: ['<rootDir>/prismaSingleton.ts']
+}
   

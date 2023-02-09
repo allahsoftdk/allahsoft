@@ -1,8 +1,7 @@
 import express, { json } from 'express'
-import { PrismaClient } from '@prisma/client' 
+import prisma from '../../prismaClient.js'
 
 var router = express.Router();
-const prisma = new PrismaClient(); 
 
 router.get('/', async (req, res) => {
   const users = await prisma.user.findMany()

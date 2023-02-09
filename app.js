@@ -7,13 +7,13 @@ import dotenv from 'dotenv';
 import {fileURLToPath} from 'url';
 dotenv.config();
 
-import indexRouter from './routes/views/index.js';
+import indexRouter from './routes/views/indexPage.js';
 import usersRouter from './routes/api/users.js';
 
 var app = express();
 
 // view engine setup
-const __filename = fileURLToPath(import.meta.url);
+const __filename = fileURLToPath(import.meta.url); 
 const __dirname = path.dirname(__filename)   
 app.set('views', path.join(__dirname, 'views')); 
 app.set('view engine', 'jade');
@@ -49,4 +49,4 @@ if (process.env.NODE_ENV === 'production') {
   console.log('Server started in development mode');
 }
 
-export default app
+export default app;

@@ -5,7 +5,7 @@
  */
 
 import app from '../app.js';
-import debug from 'debug';'allahsoft:server';
+import debug from 'debug';
 import http from 'http';
 
 /**
