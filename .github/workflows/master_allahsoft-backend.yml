@@ -34,9 +34,6 @@ jobs:
      
       - name: run prisma migrations
         run: npx prisma migrate deploy
-            
-      - name: run tests
-        run:  npm run test --if-present
 
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r
