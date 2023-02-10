@@ -7,11 +7,9 @@ WORKDIR /usr/src/app
 
 # update and install dependency
 RUN apt update && apt upgrade -y && apt-get install -y nano
-RUN npm install -g dotenv
-RUN npm install -g dotenv-cli
-RUN npm install --global cross-env
+RUN npm install -g dotenv dotenv-cli cross-env
 
 # Configure host
 ENV HOST 0.0.0.0
 
-CMD [ "npm", "run", "debug" ]
+CMD /bin/bash -c 'npm install; npm run debug'

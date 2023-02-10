@@ -51,12 +51,11 @@ services:
     restart: unless-stopped
     container_name: backend-dev
     build:
-      context: './allahsoft-backend'
-      dockerfile: 'Dockerfile-dev'
+      dockerfile: 'Dockerfile'
     networks:
       - allahsoft-network
     volumes:
-      - './allahsoft-backend:/usr/src/app'
+      - './:/usr/src/app'
 
 networks:
   allahsoft-network:
