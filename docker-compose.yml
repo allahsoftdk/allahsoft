@@ -1,0 +1,68 @@
+version: '3'
+services:
+  mariadb-dev: 
+    restart: unless-stopped
+    image: 'mariadb:10'
+    container_name: mariadb-dev
+    ports:
+      - "3306:3306"
+    environment:
+        MYSQL_ROOT_PASSWORD: U*5b3dt5wXg1xgylrxmy
+        MYSQL_ROOT_HOST: "%"
+        MYSQL_DATABASE: 'allahsoft'
+        MYSQL_USER: allahsoftadmin
+        MYSQL_PASSWORD: u*b5BWc5WXgLXGyLrxMy
+    volumes:
+      - 'db-dev-data:/var/lib/mysql'
+    networks:
+      - allahsoft-network
+
+  mariadb-test: 
+    restart: unless-stopped
+    image: 'mariadb:10'
+    container_name: mariadb-test
+    ports:
+      - "3307:3307"
+    environment:
+        MYSQL_ROOT_PASSWORD: prismaTest
+        MYSQL_ROOT_HOST: "%"
+        MYSQL_DATABASE: 'tests'
+        MYSQL_USER: prismaTest
+        MYSQL_PASSWORD: prismaTest
+        MYSQL_TCP_PORT: 3307
+    volumes:
+      - 'db-test-data:/var/lib/mysql'
+    networks:
+      - allahsoft-network
+
+  nginx:
+    restart: unless-stopped
+    image: 'nginx:1.23'
+    container_name: nginx
+    ports:
+      - '80:80'
+      - '443:443'
+    networks:
+      - allahsoft-network
+    volumes:
+      - './nginx/default.conf:/etc/nginx/conf.d/default.conf'
+
+  backend-dev:
+    restart: unless-stopped
+    container_name: backend-dev
+    build:
+      dockerfile: 'Dockerfile'
+    networks:
+      - allahsoft-network
+    volumes:
+      - './:/usr/src/app'
+
+networks:
+  allahsoft-network:
+    driver: bridge
+
+volumes:
+  db-dev-data:
+    driver: local
+  db-test-data:
+    driver: local

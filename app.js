@@ -15,8 +15,8 @@ var app = express();
 // view engine setup
 const __filename = fileURLToPath(import.meta.url); 
 const __dirname = path.dirname(__filename)   
-app.set('views', path.join(__dirname, 'views')); 
-app.set('view engine', 'jade');
+
+app.use(express.static(path.join(__dirname, 'views')));
 
 app.use(logger('dev'));
 app.use(express.json());
