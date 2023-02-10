@@ -5,7 +5,7 @@ var router = express.Router();
 
 router.get('/', async (req, res) => {
   const users = await prisma.user.findMany()
-  res.render('index', { data: users});   
+  res.render('index.html');   
 })
 
 
