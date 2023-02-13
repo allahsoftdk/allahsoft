@@ -7,8 +7,7 @@ import dotenv from 'dotenv';
 import {fileURLToPath} from 'url';
 dotenv.config();
 
-import indexRouter from './routes/views/indexPage.js';
-import usersRouter from './routes/api/users.js';
+import usersRouter from './routes/users.js';
 
 var app = express();
 
@@ -24,7 +23,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser()); 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
 app.use('/api/users', usersRouter);
 
 // catch 404 and forward to error handler
@@ -48,5 +46,11 @@ if (process.env.NODE_ENV === 'production') {
 } else {
   console.log('Server started in development mode');
 }
+
+var router = express.Router();
+
+router.get('/', async (req, res) => {
+  res.render('index.html');   
+})
 
 export default app;
