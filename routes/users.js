@@ -1,7 +1,6 @@
 import express, { json } from 'express'
 import prisma from '../prismaClient.js'
-import bcrypt from 'bcrypt'
-
+import bcrypt from 'bcryptjs'
 
 var router = express.Router();
 
@@ -11,13 +10,15 @@ router.get('/', async (req, res) => {
 })
 
 router.post('/register', async (req, res, next) => {
-  const {name,email, password1, confirmPassword} = req.body;
-  const hashPassword = await bcrypt.hash(password1, 10);
+  const {name,email, password, confirmPassword} = req.body;
+  var salt = bcrypt.genSaltSync(10);
+  var hash = bcrypt.hashSync(password, salt);
 
-  if(password1 === confirmPassword){
-    res.sendStatus(200)
+  if (password !== confirmPassword) {
+    return res.status(400).json({msg: 'Passwords do not match'});
+  } else {
+    return res.json({msg: 'Passwords match'});
   }
-  res.sendStatus(404)
 });
 
 router.get('/:id', async (req, res) => {
