@@ -47,6 +47,7 @@ router.post('/register', async (req, res, next) => {
 
 
 router.post('/login', async (req, res, next) => {
+  //req.session.token = "Dansker";
   const {username, password} = req.body;
 
   const user = await prisma.user.findUnique({
@@ -56,20 +57,27 @@ router.post('/login', async (req, res, next) => {
   })
 
   if(req.session.token){
-   res.json(req.session.token);
+   return res.json(204);
   }else{
     bcrypt.compare(password, user.password).then((match) => {
-      console.log(match);
       if(match){
         const accessToken = jwt.sign({password},"token");
+
+        /*
+        const userTokenUpdate = prisma.user.update({
+          where: { username },
+          data: { token: accessToken },
+        })
+        */
+
         req.session.token = accessToken;
-        req.session.save(function (){
-          res.json("aadasd");
-        }) //save the session ensure page load does not happen before session is saved
+        req.session.save(function (){}) //save the session ensure page load does not happen before session is saved
+        console.log(req.session.token);
+        return;
       }
     });
   }
-  res.json(user);
+  return res.json(req.session.token);
 });
 
 
