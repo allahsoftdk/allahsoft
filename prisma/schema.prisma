@@ -13,12 +13,12 @@ datasource db {
 
 model User {
   id Int @id @default(autoincrement())
-  name String? @db.VarChar(255)
+  name String? @db.VarChar(255) @unique
   email String? @unique @db.VarChar(255)
   password String @db.Text()
-  token String @db.Text()
-  created_at DateTime @db.DateTime()
-  update_at DateTime @db.DateTime()
+  token String? @db.Text()
+  created_at DateTime @db.DateTime() @default(now())
+  update_at DateTime @db.DateTime() @default(now())
   posts Post[]
   user_followers User_followers[]
   post_comments Post_comments[]
