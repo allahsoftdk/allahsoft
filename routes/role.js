@@ -54,7 +54,7 @@ router.delete('/:id', async (req, res) => {
       id: Number(roleId),
     },
   })
-  res.status(204).send();
+  res.sendStatus(204);
 })
 
 export default router
