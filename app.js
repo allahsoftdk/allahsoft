@@ -11,7 +11,6 @@ dotenv.config();
 
 import userRouter from './routes/user.js';
 import roleRouter from './routes/role.js';
-import { assert } from 'console';
 
 var app = express();
 
