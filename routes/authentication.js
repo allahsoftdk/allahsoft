@@ -69,7 +69,8 @@ router.post("/login", async (req, res, next) => {
   }
   if (bcrypt.compareSync(password, user.password)) {
     const accessToken = jwt.sign({ password }, "token"); 
-    await prisma.user.update({
+
+    const updatedUser = await prisma.user.update({
       where: {
         id: user.id,
       },
@@ -77,8 +78,9 @@ router.post("/login", async (req, res, next) => {
         token: accessToken,
       },
     });
-    req.session.token = accessToken;
-    req.session.user = user;
+
+    req.session.token = updatedUser.token;
+    req.session.user = updatedUser;
     req.session.save(function () {
       res.sendStatus(200);
     });
