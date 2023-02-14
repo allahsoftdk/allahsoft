@@ -13,8 +13,8 @@ datasource db {
 
 model User {
   id Int @id @default(autoincrement())
-  name String? @db.VarChar(255) @unique
-  email String? @unique @db.VarChar(255)
+  name String @db.VarChar(255) @unique
+  email String? @unique @db.VarChar(255) 
   password String @db.Text()
   token String? @db.Text()
   created_at DateTime @db.DateTime() @default(now())
@@ -105,9 +105,9 @@ model Role{
 }
 
 model Role_user{
-  roles Role @relation(fields: [fk_roles], references: [id])
-  fk_roles Int
+  roleId Role @relation(fields: [fk_role], references: [id])
+  fk_role Int
   userId User @relation(fields: [fk_user], references: [id])
   fk_user Int
-  @@id([fk_roles, fk_user])
+  @@id([fk_role, fk_user])
 }

@@ -5,7 +5,7 @@ var router = express.Router();
 
 router.get('/', async (req, res) => {
   const users = await prisma.user.findMany()
-  res.json(users);
+  res.status(200).json(users);
 })
 
 router.get('/:id', async (req, res) => {
@@ -15,7 +15,7 @@ router.get('/:id', async (req, res) => {
       id: Number(userId),
     },
   })
-  res.json(user);
+  res.status(200).json(user);
 })
 
 export default router
