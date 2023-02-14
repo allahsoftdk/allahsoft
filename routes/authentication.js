@@ -1,6 +1,6 @@
 import express, { json } from "express";
 import prisma from "../prismaClient.js";
-import bcrypt, { hash } from "bcryptjs";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import session from "express-session";
 
@@ -23,16 +23,7 @@ router.use(function (req, res, next) {
   if (err) res.locals.message = '<p class="msg error">' + err + "</p>";
   if (msg) res.locals.message = '<p class="msg success">' + msg + "</p>";
   next();
-});
-
-function restrict(req, res, next) {
-  if (req.session.token) {
-    next();
-  } else {
-    req.session.error = "Access denied!";
-    res.sendStatus(401);
-  }
-}
+}); 
 
 router.post("/register", async (req, res, next) => {
   const { name, email, password, confirmPassword } = req.body;
@@ -61,11 +52,15 @@ router.post("/register", async (req, res, next) => {
 });
 
 router.post("/login", async (req, res, next) => {
-  const { username, password } = req.body;
+  const { name, password } = req.body;
+  
+  if (!name || !password) {
+    return res.status(400).json({ msg: "Please enter all fields" });
+  }
 
   const user = await prisma.user.findUnique({
     where: {
-      name: username,
+      name: name,
     },
   });
 
@@ -73,8 +68,8 @@ router.post("/login", async (req, res, next) => {
     return res.status(400).json({ msg: "User does not exist" });
   }
   if (bcrypt.compareSync(password, user.password)) {
-    const accessToken = jwt.sign({ password }, "token");
-    const user = await prisma.user.update({
+    const accessToken = jwt.sign({ password }, "token"); 
+    await prisma.user.update({
       where: {
         id: user.id,
       },
@@ -83,6 +78,7 @@ router.post("/login", async (req, res, next) => {
       },
     });
     req.session.token = accessToken;
+    req.session.user = user;
     req.session.save(function () {
       res.sendStatus(200);
     });
@@ -91,8 +87,14 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
-router.get("/logout", async (req, res, next) => {
-  const user = await prisma.user.update({
+router.post("/logout", async (req, res, next) => {
+  const user = req.session.user;
+  
+  if (!user) {
+    return res.status(400).json({ msg: "This user does not have an active session" });
+  }
+
+  await prisma.user.update({
     where: {
       id: user.id,
     },
@@ -104,7 +106,16 @@ router.get("/logout", async (req, res, next) => {
   res.sendStatus(200);
 });
 
-router.get("/restricted", restrict, async (req, res, next) => {
+function restrict(req, res, next) {
+  if (req.session.token) {
+    next();
+  } else {
+    req.session.error = "Access denied!";
+    res.sendStatus(401);
+  }
+}
+
+router.post("/restricted", restrict, async (req, res, next) => {
   res.sendStatus(200);
 });
 
