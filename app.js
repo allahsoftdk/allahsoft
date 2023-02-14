@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import dotenv from 'dotenv';
 import {fileURLToPath} from 'url'; 
+import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDoc from './swagger.json' assert { type: 'json' };
 dotenv.config();
@@ -16,6 +17,7 @@ import roleUserRouter from './routes/role_user.js';
 import authenticationRouter from './routes/authentication.js';
 
 var app = express();
+app.use(cors());
 
 // view engine setup
 const __filename = fileURLToPath(import.meta.url); 
