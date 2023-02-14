@@ -5,10 +5,13 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import dotenv from 'dotenv';
 import {fileURLToPath} from 'url'; 
+import swaggerUi from 'swagger-ui-express';
+import swaggerDoc from './swagger.json' assert { type: 'json' };
 dotenv.config();
 
 import userRouter from './routes/user.js';
 import roleRouter from './routes/role.js';
+import { assert } from 'console';
 
 var app = express();
 
@@ -24,6 +27,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/user', userRouter);
 app.use('/api/role', roleRouter);
+
+app.use(
+  '/docs',
+  swaggerUi.serve, 
+  swaggerUi.setup(swaggerDoc)
+);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
