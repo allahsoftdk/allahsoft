@@ -105,9 +105,9 @@ model Role{
 }
 
 model Role_user{
-  roles Role @relation(fields: [fk_roles], references: [id])
-  fk_roles Int
+  roleId Role @relation(fields: [fk_role], references: [id])
+  fk_role Int
   userId User @relation(fields: [fk_user], references: [id])
   fk_user Int
-  @@id([fk_roles, fk_user])
+  @@id([fk_role, fk_user])
 }
