@@ -13,7 +13,6 @@
   - You are about to drop the `Roles_users` table. If the table is not empty, all the data it contains will be lost.
   - You are about to drop the `Settings` table. If the table is not empty, all the data it contains will be lost.
   - You are about to drop the `User_followers` table. If the table is not empty, all the data it contains will be lost.
-  - A unique constraint covering the columns `[name]` on the table `User` will be added. If there are existing duplicate values, this will fail.
 
 */
 -- DropForeignKey
@@ -51,7 +50,6 @@ ALTER TABLE `User_followers` DROP FOREIGN KEY `User_followers_fk_user_fkey`;
 
 -- AlterTable
 ALTER TABLE `User` MODIFY `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    MODIFY `token` TEXT NULL,
     MODIFY `update_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(3);
 
 -- DropTable
@@ -167,9 +165,6 @@ CREATE TABLE `Role_user` (
 
     PRIMARY KEY (`fk_roles`, `fk_user`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateIndex
-CREATE UNIQUE INDEX `User_name_key` ON `User`(`name`);
 
 -- AddForeignKey
 ALTER TABLE `User_follower` ADD CONSTRAINT `User_follower_fk_user_fkey` FOREIGN KEY (`fk_user`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
