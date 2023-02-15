@@ -17,15 +17,17 @@ model User {
   email String? @unique @db.VarChar(255) 
   password String @db.Text()
   token String? @db.Text()
+  role_id Role @relation(fields: [fk_role], references: [id])
   created_at DateTime @db.DateTime() @default(now())
   update_at DateTime @db.DateTime() @default(now())
+  fk_role Int
   posts Post[]
   user_followers User_follower[]
   post_comments Post_comment[]
   post_likes Post_like[]
   chat_messages Chat_message[]
   chat_room_participants Chat_room_participant[]
-  roles_users Role_user[]
+  
 }
 
 model Prayer_alarm {
@@ -101,13 +103,5 @@ model Chat_room_participant{
 model Role{
   id Int @id @default(autoincrement())
   name String @db.VarChar(255)
-  roles_users Role_user[]
-}
-
-model Role_user{
-  roleId Role @relation(fields: [fk_role], references: [id])
-  fk_role Int
-  userId User @relation(fields: [fk_user], references: [id])
-  fk_user Int
-  @@id([fk_role, fk_user])
+  users User[]
 }

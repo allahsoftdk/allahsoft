@@ -12,12 +12,11 @@ dotenv.config();
 
 import userRouter from './routes/user.js';
 import roleRouter from './routes/role.js';
-import roleUserRouter from './routes/role_user.js';
 
 import authenticationRouter from './routes/authentication.js';
 
 var app = express();
-app.use(cors());
+app.use(cors({ credentials: true, origin: true }))
 
 // view engine setup
 const __filename = fileURLToPath(import.meta.url); 
@@ -31,7 +30,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/user', userRouter);
 app.use('/api/role', roleRouter);
-app.use('/api/role_user', roleUserRouter);
 
 app.use('/api/auth', authenticationRouter);
 

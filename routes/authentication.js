@@ -8,9 +8,15 @@ var router = express.Router();
 
 router.use(
   session({
-    secret: "keyboard cat",
+    secret: "keyboardcat1527",
     resave: false,
     saveUninitialized: false,
+    resave: false,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24,
+      secure: false,
+      httpOnly: false
+    }
   })
 );
 
@@ -42,10 +48,12 @@ router.post("/register", async (req, res, next) => {
       email,
       password: hashPasword,
       token: accessToken,
+      fk_role: 1,
     },
   });
 
   req.session.token = accessToken;
+  req.session.user = user;
   req.session.save(function () {
     res.sendStatus(200);
   });
@@ -77,21 +85,23 @@ router.post("/login", async (req, res, next) => {
       data: {
         token: accessToken,
       },
+      include: {
+        role_id: true,
+      },
     });
 
-    req.session.token = updatedUser.token;
     req.session.user = updatedUser;
+    req.session.accessToken = accessToken;
     req.session.save(function () {
-      res.sendStatus(200);
+      res.status(200).json({ id: updatedUser.id, name: updatedUser.name, email: updatedUser.email, fk_role: updatedUser.role_id });
     });
   } else {
     return res.status(401).json({ msg: "Invalid credentials" });
   }
 });
 
-router.post("/logout", async (req, res, next) => {
+router.post("/logout", async (req, res) => {
   const user = req.session.user;
-  
   if (!user) {
     return res.status(400).json({ msg: "This user does not have an active session" });
   }
@@ -109,7 +119,7 @@ router.post("/logout", async (req, res, next) => {
 });
 
 function restrict(req, res, next) {
-  if (req.session.token) {
+  if (req.session.accessToken) {
     next();
   } else {
     req.session.error = "Access denied!";
