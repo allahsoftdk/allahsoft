@@ -15,7 +15,6 @@ import roleRouter from './routes/role.js';
 import roleUserRouter from './routes/role_user.js';
 import prayer_alarm from './routes/prayer_alarm.js';
 import setting from './routes/setting.js';
-import user_follower from './routes/user_follower.js';
 
 import authenticationRouter from './routes/authentication.js';
 
@@ -37,7 +36,6 @@ app.use('/api/role', roleRouter);
 app.use('/api/role_user', roleUserRouter);
 app.use('/api/prayer_alarm', prayer_alarm);
 app.use('/api/setting', setting);
-app.use('/api/user_follower', user_follower);
 
 app.use('/api/auth', authenticationRouter);
 
