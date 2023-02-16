@@ -2,8 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
-  binaryTargets = ["native","debian-openssl-1.1.x"]
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-1.1.x"]
 }
 
 datasource db {
@@ -12,72 +12,74 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  name String? @db.VarChar(255) @unique
-  email String? @unique @db.VarChar(255) 
-  password String? @db.Text()
-  token String? @db.Text()
-  role_id Role @relation(fields: [fk_role], references: [id])
-  created_at DateTime @db.DateTime() @default(now())
-  update_at DateTime @db.DateTime() @default(now())
-  fk_role Int
-  posts Post[]
-  followedBy User[] @relation("Userfollows")
-  following User[] @relation("Userfollows")
-  postComments Post_comment[] 
-  likes Post[] @relation("PostLike")
-  chatMessages Chat_message[]
-  chatRoomsParticipating Chat_room[] @relation("ChatRoomParticipants")
+  id                     Int            @id @default(autoincrement())
+  name                   String?        @unique @db.VarChar(255)
+  email                  String?        @unique @db.VarChar(255)
+  password               String?        @db.Text()
+  token                  String?        @db.Text()
+  created_at             DateTime       @default(now()) @db.DateTime()
+  update_at              DateTime       @default(now()) @db.DateTime()
+  posts                  Post[]
+  followedBy             User[]         @relation("Userfollows")
+  following              User[]         @relation("Userfollows")
+  postComments           Post_comment[]
+  likes                  Post[]         @relation("PostLike")
+  chatMessages           Chat_message[]
+  chatRoomsParticipating Chat_room[]    @relation("ChatRoomParticipants")
+  role                   Role           @relation(fields: [roleId], references: [id])
+  roleId                 Int
 }
 
 model Prayer_alarm {
-  id Int @id @default(autoincrement())
-  prayer_alarm String @db.VarChar(255)
+  id          Int    @id @default(autoincrement())
+  prayerAlarm String @db.VarChar(255)
 }
 
-model Setting{
-  id Int @id @default(autoincrement())
-  setting_name String @db.VarChar(255)
-  setting_value String @db.VarChar(255)
+model Setting {
+  id           Int    @id @default(autoincrement())
+  settingName  String @db.VarChar(255)
+  settingValue String @db.VarChar(255)
 }
 
 model Post {
-  id       Int  @id @default(autoincrement())
-  description String @db.TinyText()
-  resources String @db.VarChar(255)
-  userId   User @relation(fields: [fk_user], references: [id])
-  fk_user Int
-  post_comments Post_comment[]
-  likedBy User[] @relation("PostLike")
+  id           Int            @id @default(autoincrement())
+  description  String         @db.TinyText()
+  resources    String         @db.VarChar(255)
+  user         User           @relation(fields: [userId], references: [id])
+  userId       Int
+  postComments Post_comment[]
+  likedBy      User[]         @relation("PostLike")
 }
 
-model Post_comment{
+model Post_comment {
   comment String @db.TinyText()
-  postCommentId Post @relation(fields: [fk_post], references: [id])
-  fk_post Int
-  userId   User @relation(fields: [fk_user], references: [id])
-  fk_user Int
-  @@id([fk_post, fk_user])
+  post    Post   @relation(fields: [postId], references: [id])
+  postId  Int
+  user    User   @relation(fields: [userId], references: [id])
+  userId  Int
+
+  @@id([postId, userId])
 }
 
-
-model Chat_room{
-  id Int @id @default(autoincrement())
-  name String @db.VarChar(255)
-  chat_messages Chat_message[]
-  chatRoomParticipants User[] @relation("ChatRoomParticipants")
+model Chat_room {
+  id                   Int            @id @default(autoincrement())
+  name                 String         @db.VarChar(255)
+  chatMessages         Chat_message[]
+  chatRoomParticipants User[]         @relation("ChatRoomParticipants")
 }
 
-model Chat_message{
-  messages String @db.VarChar(255)
-  chat_room Chat_room @relation(fields: [fk_chat_room], references: [id])
-  fk_chat_room Int
-  userId  User @relation(fields: [fk_user], references: [id])
-  fk_user Int
-  @@id([fk_chat_room, fk_user])
+model Chat_message {
+  messages   String    @db.VarChar(255)
+  chatRoom   Chat_room @relation(fields: [chatRoomId], references: [id])
+  chatRoomId Int
+  user       User      @relation(fields: [userId], references: [id])
+  userId     Int
+
+  @@id([chatRoomId, userId])
 }
 
-model Role{
-  id Int @id @default(autoincrement())
-  name String @db.VarChar(255)
+model Role {
+  id    Int    @id @default(autoincrement())
+  role  String @db.VarChar(255)
+  users User[]
 }
