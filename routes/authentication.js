@@ -32,31 +32,34 @@ router.use(function (req, res, next) {
 }); 
 
 router.post("/register", async (req, res, next) => {
-  const { name, email, password, confirmPassword } = req.body;
-  const hashPasword = bcrypt.hashSync(password, 8);
-
-  if (password !== confirmPassword) {
-    return res.status(400).json({ msg: "Passwords do not match" });
-  } else if (!name || !email || !password) {
-    return res.status(400).json({ msg: "Please enter all fields" });
+  try {
+    const { name, email, password, confirmPassword } = req.body;
+    const hashPasword = bcrypt.hashSync(password, 8);
+  
+    if (password !== confirmPassword) {
+      return res.status(400).json({ msg: "Passwords do not match" });
+    } else if (!name || !email || !password) {
+      return res.status(400).json({ msg: "Please enter all fields" });
+    }
+  
+    const accessToken = jwt.sign({ password }, "token");
+    const user = await prisma.user.create({
+      data: {
+        name,
+        email,
+        password: hashPasword,
+        token: accessToken,
+      },
+    });
+  
+    req.session.token = accessToken;
+    req.session.save(function () {
+      res.sendStatus(200);
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: err });
   }
-
-  const accessToken = jwt.sign({ password }, "token");
-  const user = await prisma.user.create({
-    data: {
-      name,
-      email,
-      password: hashPasword,
-      token: accessToken,
-      fk_role: 1,
-    },
-  });
-
-  req.session.token = accessToken;
-  req.session.user = user;
-  req.session.save(function () {
-    res.sendStatus(200);
-  });
 });
 
 router.post("/login", async (req, res, next) => {

@@ -13,26 +13,26 @@ datasource db {
 
 model User {
   id Int @id @default(autoincrement())
-  name String @db.VarChar(255) @unique
+  name String? @db.VarChar(255) @unique
   email String? @unique @db.VarChar(255) 
-  password String @db.Text()
+  password String? @db.Text()
   token String? @db.Text()
   role_id Role @relation(fields: [fk_role], references: [id])
   created_at DateTime @db.DateTime() @default(now())
   update_at DateTime @db.DateTime() @default(now())
   fk_role Int
   posts Post[]
-  user_followers User_follower[]
-  post_comments Post_comment[]
-  post_likes Post_like[]
-  chat_messages Chat_message[]
-  chat_room_participants Chat_room_participant[]
-  
+  followedBy User[] @relation("Userfollows")
+  following User[] @relation("Userfollows")
+  postComments Post_comment[] 
+  likes Post[] @relation("PostLike")
+  chatMessages Chat_message[]
+  chatRoomsParticipating Chat_room[] @relation("ChatRoomParticipants")
 }
 
 model Prayer_alarm {
   id Int @id @default(autoincrement())
-  prayer_alarm DateTime @db.DateTime()
+  prayer_alarm String @db.VarChar(255)
 }
 
 model Setting{
@@ -48,14 +48,7 @@ model Post {
   userId   User @relation(fields: [fk_user], references: [id])
   fk_user Int
   post_comments Post_comment[]
-  post_likes Post_like[]
-}
-
-model User_follower{
- id Int @id @default(autoincrement())
- follower_id Int @db.Int()
- userId User @relation(fields: [fk_user], references: [id])
- fk_user Int
+  likedBy User[] @relation("PostLike")
 }
 
 model Post_comment{
@@ -68,32 +61,16 @@ model Post_comment{
 }
 
 
-model Post_like{
-  postId Post @relation(fields: [fk_post], references: [id])
-  fk_post Int
-  userId   User @relation(fields: [fk_user], references: [id])
-  fk_user Int
-  @@id([fk_post, fk_user])
-}
-
 model Chat_room{
   id Int @id @default(autoincrement())
   name String @db.VarChar(255)
   chat_messages Chat_message[]
-  chat_room_participants Chat_room_participant[]
+  chatRoomParticipants User[] @relation("ChatRoomParticipants")
 }
 
 model Chat_message{
   messages String @db.VarChar(255)
-  chat_rooms Chat_room @relation(fields: [fk_chat_room], references: [id])
-  fk_chat_room Int
-  userId  User @relation(fields: [fk_user], references: [id])
-  fk_user Int
-  @@id([fk_chat_room, fk_user])
-}
-
-model Chat_room_participant{
-  chat_rooms Chat_room @relation(fields: [fk_chat_room], references: [id])
+  chat_room Chat_room @relation(fields: [fk_chat_room], references: [id])
   fk_chat_room Int
   userId  User @relation(fields: [fk_user], references: [id])
   fk_user Int
@@ -103,5 +80,4 @@ model Chat_room_participant{
 model Role{
   id Int @id @default(autoincrement())
   name String @db.VarChar(255)
-  users User[]
 }
