@@ -10,7 +10,8 @@ router.get('/', async (req, res) => {
     res.status(200).json(roles);
   }
   catch (err) {
-    return res.status(500).json({ error: err });
+    console.log(err);
+    return res.sendStatus(500);
   }
 })
 
@@ -26,9 +27,9 @@ router.get('/:id', async (req, res) => {
     res.status(200).json(role);
   }
   catch (err) {
-    return res.status(500).json({ error: err });
+    console.log(err);
+    return res.sendStatus(500);
   }
-
 })
 
 // POST /roles
@@ -43,7 +44,8 @@ router.post('/', async (req, res, next) => {
     res.status(201).json(role);
   }
   catch (err) {
-    return res.status(500).json({ error: err });
+    console.log(err);
+    return res.sendStatus(500);
   }
 });
 
@@ -63,7 +65,8 @@ router.put('/:id', async (req, res) => {
     res.status(200).json(role);
   }
   catch (err) {
-    return res.status(500).json({ error: err });
+    console.log(err);
+    return res.sendStatus(500);
   }
 })
 
@@ -79,7 +82,8 @@ router.delete('/:id', async (req, res) => {
     res.sendStatus(204);
   }
   catch (err) {
-    return res.status(500).json({ error: err });
+    console.log(err);
+    return res.sendStatus(500);
   }
 })
 
