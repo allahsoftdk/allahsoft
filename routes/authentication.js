@@ -71,50 +71,23 @@ router.post("/register", async (req, res, next) => {
   }
 });
 
-router.post("/register/admin", async (req, res, next) => {
-  try {
-    const { name, email, password, confirmPassword } = req.body;
-    const hashPasword = bcrypt.hashSync(password, 8);
+router.post("/setRole", async (req, res, next) => {
+  const { id, roleId } = req.body;
 
-    if (!req.session.user || req.session.user.roleId !== 2) {
-      return res
-        .status(401)
-        .json({ msg: "Only an admin can register other admins" });
-    }
-
-    if (password !== confirmPassword) {
-      return res.status(400).json({ msg: "Passwords do not match" });
-    } else if (!name || !email || !password) {
-      return res.status(400).json({ msg: "Please enter all fields" });
-    } else if (await prisma.user.findUnique({ where: { email: email } })) {
-      return res.status(400).json({ msg: "Email already in use" });
-    } else if (await prisma.user.findUnique({ where: { name: name } })) {
-      return res.status(400).json({ msg: "Username already in use" });
-    } else if (password.length < 8) {
-      return res
-        .status(400)
-        .json({ msg: "Password must be at least 8 characters" });
-    }
-
-    const accessToken = jwt.sign({ password }, "token");
-    const user = await prisma.user.create({
-      data: {
-        name,
-        email,
-        password: hashPasword,
-        token: accessToken,
-        roleId: 2,
-      },
-    });
-
-    req.session.token = accessToken;
-    req.session.save(function () {
-      res.sendStatus(200);
-    });
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json({ error: err });
+  if (!req.session.user || req.session.user.roleId !== 2) {
+    return res.status(401).json({ msg: "Unauthorized" });
   }
+
+  const user = await prisma.user.update({
+    where: {
+      id: id,
+    },
+    data: {
+      roleId: roleId,
+    },
+  });
+
+  res.sendStatus(200);
 });
 
 router.post("/login", async (req, res, next) => {
