@@ -40,6 +40,14 @@ router.post("/register", async (req, res, next) => {
       return res.status(400).json({ msg: "Passwords do not match" });
     } else if (!name || !email || !password) {
       return res.status(400).json({ msg: "Please enter all fields" });
+    } else if (await prisma.user.findUnique({ where: { email: email } })) {
+      return res.status(400).json({ msg: "Email already in use" });
+    } else if (await prisma.user.findUnique({ where: { name: name } })) {
+      return res.status(400).json({ msg: "Username already in use" });
+    } else if (password.length < 8) {
+      return res
+        .status(400)
+        .json({ msg: "Password must be at least 8 characters" });
     }
 
     const accessToken = jwt.sign({ password }, "token");
@@ -61,6 +69,25 @@ router.post("/register", async (req, res, next) => {
     console.log(err);
     return res.status(500).json({ error: err });
   }
+});
+
+router.post("/setRole", async (req, res, next) => {
+  const { id, roleId } = req.body;
+
+  if (!req.session.user || req.session.user.roleId !== 2) {
+    return res.status(401).json({ msg: "Unauthorized" });
+  }
+
+  const user = await prisma.user.update({
+    where: {
+      id: id,
+    },
+    data: {
+      roleId: roleId,
+    },
+  });
+
+  res.sendStatus(200);
 });
 
 router.post("/login", async (req, res, next) => {
