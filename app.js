@@ -14,6 +14,7 @@ import userRouter from "./routes/user.js";
 import roleRouter from "./routes/role.js";
 import prayer_alarm from "./routes/prayer_alarm.js";
 import setting from "./routes/setting.js";
+import chatRooms from "./routes/chatRoom.js";
 
 import authenticationRouter from "./routes/authentication.js";
 
@@ -34,6 +35,7 @@ app.use("/api/user", userRouter);
 app.use("/api/role", roleRouter);
 app.use("/api/prayer_alarm", prayer_alarm);
 app.use("/api/setting", setting);
+app.use("/api/chatRoom", chatRooms);
 
 app.use("/api/auth", authenticationRouter);
 
@@ -56,9 +58,9 @@ app.use(function (err, req, res, next) {
 });
 
 if (process.env.NODE_ENV === "production") {
-  console.log("Server started in production mode");
+  console.log("\x1b[36m%s\x1b[0m", "Server started in production mode");
 } else {
-  console.log("Server started in development mode");
+  console.log("\x1b[36m%s\x1b[0m", "Server started in development mode");
 }
 
 export default app;

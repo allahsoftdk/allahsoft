@@ -128,7 +128,7 @@ router.post("/login", async (req, res, next) => {
         id: updatedUser.id,
         name: updatedUser.name,
         email: updatedUser.email,
-        roleId: updatedUser.roleId,
+        roleId: updatedUser.role,
       });
     });
   } else {
