@@ -17,12 +17,11 @@ router.get("/", async (req, res) => {
 
 //GET /post/followerPost
 router.get('/followerPost', async (req, res) => {
-    const { dd } = req.body;
-    console.log(dd);
+    const { getUsersFollower } = req.body;
     try {
         const posts = await prisma.post.findMany({
             where: {
-                userId: { in: dd },
+                userId: { in: getUsersFollower },
             },
             include: {
                 likedBy: true,
