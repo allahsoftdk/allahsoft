@@ -30,15 +30,15 @@ router.get("/id/:id", async (req, res) => {
 
 router.get('/followers/:id', async (req, res) => {
   try {
-      const followers = await prisma.user.findMany({
-        where: {
-          id: Number(req.params.id)
-        },
-        include: {
-          following: true
-        }
-      })
-      res.status(200).json(followers);
+    const followers = await prisma.user.findMany({
+      where: {
+        id: Number(req.params.id)
+      },
+      include: {
+        following: true
+      }
+    })
+    res.status(200).json(followers);
   }
   catch (err) {
     console.log(err);
@@ -46,10 +46,9 @@ router.get('/followers/:id', async (req, res) => {
   }
 });
 
-router.post('/:id/follows/:followId', async (req, res) => {
-  try{
-    const userId = req.params.id;
-    const followId = req.params.followId;
+router.post('/follow', async (req, res) => {
+  try {
+    const { userId, followId } = req.body;
     const user = await prisma.user.update({
       where: {
         id: Number(userId),
@@ -67,7 +66,27 @@ router.post('/:id/follows/:followId', async (req, res) => {
   catch (err) {
     return res.status(500).json({ error: err });
   }
-})
+});
+
+//In the database "A" is unfollowUserId and currentUser is "B"
+router.put("/unfollow", async (req, res) => {
+  try {
+    const { currentUser, unfollowUserId } = req.body;
+    const result = await prisma.user.update({
+      where: {
+        id: Number(currentUser)
+      },
+      data: {
+        following: { disconnect: [{ id: Number(unfollowUserId) }] }
+      }
+    })
+    res.sendStatus(204);
+  } catch (err) {
+    console.log(err);
+    return res.sendStatus(500);
+  }
+});
+
 
 
 

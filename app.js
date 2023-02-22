@@ -14,6 +14,8 @@ import userRouter from "./routes/user.js";
 import roleRouter from "./routes/role.js";
 import prayer_alarm from "./routes/prayer_alarm.js";
 import setting from "./routes/setting.js";
+import post from "./routes/post.js";
+import post_comment from "./routes/post_comment.js";
 
 import authenticationRouter from "./routes/authentication.js";
 
@@ -34,6 +36,8 @@ app.use("/api/user", userRouter);
 app.use("/api/role", roleRouter);
 app.use("/api/prayer_alarm", prayer_alarm);
 app.use("/api/setting", setting);
+app.use("/api/post", post);
+app.use("/api/post_comment", post_comment);
 
 app.use("/api/auth", authenticationRouter);
 

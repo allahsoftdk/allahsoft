@@ -18,11 +18,17 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const alarmId = req.params.id;
+
+    if (!Number.isInteger(Number(alarmId))) {
+      return res.status(400).json({ msg: "The passed parameter has to be a number" });
+    }
+
     const prayer_alarm = await prisma.prayer_alarm.findUnique({
       where: {
         id: Number(alarmId),
       },
     });
+    console.log(prayer_alarm);
     res.status(200).json(prayer_alarm);
   } catch (err) {
     console.log(err);
@@ -50,7 +56,14 @@ router.post("/", async (req, res, next) => {
 router.put("/:id", async (req, res) => {
   try {
     const prayerAlarmId = req.params.id;
-    const { prayerAlarm } = req.body;
+    const prayerAlarm = req.body;
+
+    console.log(prayerAlarm);
+
+    if (!Number.isInteger(Number(prayerAlarmId))) {
+      return res.status(400).json({ msg: "The passed parameter has to be a number" });
+    }
+
     const alarm = await prisma.prayer_alarm.update({
       where: {
         id: Number(prayerAlarmId),
