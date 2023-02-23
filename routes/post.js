@@ -1,10 +1,11 @@
 import express, { json } from "express";
 import prisma from "../prismaClient.js";
+import { restrictAdmin, restrictUser } from "../middleware/auth.js";
 
 var router = express.Router();
 
 //GET /post
-router.get("/", async (req, res) => {
+router.get("/", restrictUser, async (req, res) => {
     try {
         const userPost = await prisma.post.findMany();
         res.status(200).json(userPost);
@@ -16,12 +17,12 @@ router.get("/", async (req, res) => {
 
 
 //GET /post/followerPost
-router.get('/followerPost', async (req, res) => {
-    const { getUsersFollower } = req.body;
+router.get('/followerPost', restrictUser, async (req, res) => {
+    const { getUsersFollowerPost } = req.body;
     try {
         const posts = await prisma.post.findMany({
             where: {
-                userId: { in: getUsersFollower },
+                userId: { in: getUsersFollowerPost },
             },
             include: {
                 likedBy: true,
@@ -38,7 +39,7 @@ router.get('/followerPost', async (req, res) => {
 
 
 //POST /post
-router.post("/", async (req, res, next) => {
+router.post("/", restrictUser, async (req, res, next) => {
     try {
         const { description, resources, userId } = req.body;
         const post = await prisma.post.create({
@@ -57,7 +58,7 @@ router.post("/", async (req, res, next) => {
 
 //In the database "A" is postId and "B" is userId
 //POST post/like/
-router.post("/like", async (req, res, next) => {
+router.post("/like", restrictUser, async (req, res, next) => {
     try {
         const { userId, postId } = req.body;
         console.log(userId, postId);
@@ -82,7 +83,7 @@ router.post("/like", async (req, res, next) => {
 
 
 //In the database "A" is userId and "B" is PostId
-router.put("/unlike", async (req, res) => {
+router.put("/unlike", restrictUser, async (req, res) => {
     try {
         const { postId, userId } = req.body;
         const result = await prisma.user.update({
@@ -102,7 +103,7 @@ router.put("/unlike", async (req, res) => {
 
 
 // PUT /post/:id
-router.put("/:id", async (req, res) => {
+router.put("/:id", restrictUser, async (req, res) => {
     try {
         const postId = req.params.id;
         const { description, resources, userId } = req.body;
@@ -125,7 +126,7 @@ router.put("/:id", async (req, res) => {
 });
 
 //DELETE /post/:id
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", restrictUser, async (req, res) => {
     try {
         const id = req.params.id;
         console.log(id);

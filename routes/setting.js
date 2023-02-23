@@ -1,10 +1,11 @@
 import express, { json } from "express";
 import prisma from "../prismaClient.js";
+import { restrictAdmin, restrictUser } from "../middleware/auth.js";
 
 var router = express.Router();
 
 //GET /settings
-router.get("/", async (req, res) => {
+router.get("/", restrictUser, async (req, res) => {
   try {
     const settings = await prisma.setting.findMany();
     res.status(200).json(settings);
@@ -15,7 +16,7 @@ router.get("/", async (req, res) => {
 });
 
 //GET /settings/:id
-router.get("/:id", async (req, res) => {
+router.get("/:id", restrictUser, async (req, res) => {
   try {
     const settingsId = req.params.id;
     const settings = await prisma.setting.findUnique({
@@ -31,7 +32,7 @@ router.get("/:id", async (req, res) => {
 });
 
 //POST /settings
-router.post("/", async (req, res, next) => {
+router.post("/", restrictUser, async (req, res, next) => {
   try {
     const { settingName, settingValue } = req.body;
     const setting = await prisma.setting.create({
@@ -48,7 +49,7 @@ router.post("/", async (req, res, next) => {
 });
 
 // PUT /settings/:id
-router.put("/:id", async (req, res) => {
+router.put("/:id", restrictUser, async (req, res) => {
   try {
     const settings_id = req.params.id;
     const { settingName, settingValue } = req.body;
@@ -68,8 +69,8 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-//DELETE /prayer_alarm/:id
-router.delete("/:id", async (req, res) => {
+//DELETE /setting/:id
+router.delete("/:id", restrictUser, async (req, res) => {
   try {
     const settingsId = req.params.id;
     const alarm = await prisma.setting.delete({

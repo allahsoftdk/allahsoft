@@ -1,9 +1,10 @@
 import express, { json } from "express";
 import prisma from "../prismaClient.js";
+import { restrictAdmin, restrictUser } from "../middleware/auth.js";
 
 var router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/", restrictUser, async (req, res) => {
   try {
     const users = await prisma.user.findMany();
     res.status(200).json(users);
@@ -13,7 +14,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/id/:id", async (req, res) => {
+router.get("/id/:id", restrictUser, async (req, res) => {
   try {
     const userId = req.params.id;
     const user = await prisma.user.findUnique({
@@ -28,7 +29,7 @@ router.get("/id/:id", async (req, res) => {
   }
 })
 
-router.get('/followers/:id', async (req, res) => {
+router.get('/followers/:id', restrictUser, async (req, res) => {
   try {
     const followers = await prisma.user.findMany({
       where: {
@@ -46,7 +47,7 @@ router.get('/followers/:id', async (req, res) => {
   }
 });
 
-router.post('/follow', async (req, res) => {
+router.post('/follow', restrictUser, async (req, res) => {
   try {
     const { userId, followId } = req.body;
     const user = await prisma.user.update({
@@ -69,7 +70,7 @@ router.post('/follow', async (req, res) => {
 });
 
 //In the database "A" is unfollowUserId and currentUser is "B"
-router.put("/unfollow", async (req, res) => {
+router.put("/unfollow", restrictUser, async (req, res) => {
   try {
     const { currentUser, unfollowUserId } = req.body;
     const result = await prisma.user.update({

@@ -8,6 +8,7 @@ import { fileURLToPath } from "url";
 import cors from "cors";
 import swaggerUi from "swagger-ui-express";
 import swaggerDoc from "./swagger.json" assert { type: "json" };
+import session from "express-session";
 dotenv.config();
 
 import userRouter from "./routes/user.js";
@@ -20,6 +21,19 @@ import post_comment from "./routes/post_comment.js";
 import authenticationRouter from "./routes/authentication.js";
 
 var app = express();
+
+app.use(session({
+  secret: "keyboardcat1527",
+  resave: false,
+  saveUninitialized: false,
+  resave: false,
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24,
+    secure: false,
+    httpOnly: false,
+  },
+}));
+
 app.use(cors({ credentials: true, origin: true }));
 
 // view engine setup
