@@ -62,9 +62,10 @@ CREATE TABLE `Chat_room` (
 
 -- CreateTable
 CREATE TABLE `Chat_message` (
-    `messages` VARCHAR(255) NOT NULL,
+    `message` VARCHAR(255) NOT NULL,
     `chatRoomId` INTEGER NOT NULL,
     `userId` INTEGER NOT NULL,
+    `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`chatRoomId`, `userId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -112,7 +113,7 @@ ALTER TABLE `User` ADD CONSTRAINT `User_roleId_fkey` FOREIGN KEY (`roleId`) REFE
 ALTER TABLE `Post` ADD CONSTRAINT `Post_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Post_comment` ADD CONSTRAINT `Post_comment_postId_fkey` FOREIGN KEY (`postId`) REFERENCES `Post`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Post_comment` ADD CONSTRAINT `Post_comment_postId_fkey` FOREIGN KEY (`postId`) REFERENCES `Post`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Post_comment` ADD CONSTRAINT `Post_comment_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
