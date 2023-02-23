@@ -17,8 +17,8 @@ model User {
   email                  String?        @unique @db.VarChar(255)
   password               String?        @db.Text()
   token                  String?        @db.Text()
-  created_at             DateTime       @default(now()) @db.DateTime()
-  update_at              DateTime       @default(now()) @db.DateTime()
+  created_at             DateTime       @default(now())
+  update_at              DateTime       @default(now())
   posts                  Post[]
   followedBy             User[]         @relation("Userfollows")
   following              User[]         @relation("Userfollows")
