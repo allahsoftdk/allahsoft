@@ -1,6 +1,9 @@
 {
   "name": "allahsoft",
   "version": "0.0.0",
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,21 +11,30 @@
     "debug": "npm install && nodemon -r dotenv/config --legacy-watch -P 1000 ./bin/www.js",
     "test": "dotenv -e .env.test npx prisma migrate dev && cross-env NODE_OPTIONS=--experimental-vm-modules dotenv -e .env.test jest --runInBand",
     "test:watch": "docker exec -it backend-dev sh -c \"dotenv -e .env.test npx prisma migrate dev\" dotenv -e .env.test && cross-env NODE_OPTIONS=--experimental-vm-modules jest --watch --runInBand",
-    "migrations": "docker exec -it backend-dev sh -c \"dotenv -e .env npx prisma migrate dev\""
+    "migrations": "docker exec -it backend-dev sh -c \"dotenv -e .env npx prisma migrate dev\"",
+    "seed": "docker exec -it backend-dev sh -c \"dotenv -e .env npx prisma db seed\"",
+    "reset": "docker exec -it backend-dev sh -c \"dotenv -e .env npx prisma migrate reset\""
   },
   "dependencies": {
     "@prisma/client": "^4.10.0",
+    "bcryptjs": "^2.4.3",
     "cookie-parser": "~1.4.4",
+    "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "debug": "~2.6.9",
     "dotenv": "^16.0.3",
     "dotenv-cli": "^7.0.0",
+    "email-validator": "^2.0.4",
     "express": "~4.16.1",
+    "express-session": "^1.17.3",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
+    "jsonwebtoken": "^9.0.0",
     "morgan": "~1.9.1",
     "nodemon": "^2.0.20",
-    "supertest": "^6.3.3"
+    "socket.io": "^4.6.0",
+    "supertest": "^6.3.3",
+    "swagger-ui-express": "^4.6.0"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.3",
