@@ -1,7 +1,9 @@
 import express, { json } from "express";
 import prisma from "../prismaClient.js";
+import auth from "../middleware/auth.js";
 
 var router = express.Router();
+router.use(auth);
 
 //GET /settings
 router.get("/", async (req, res) => {
@@ -68,7 +70,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-//DELETE /prayer_alarm/:id
+//DELETE /setting/:id
 router.delete("/:id", async (req, res) => {
   try {
     const settingsId = req.params.id;

@@ -3,6 +3,7 @@ import prisma from "../prismaClient.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import session from "express-session";
+import auth from "../middleware/auth.js";
 
 var router = express.Router();
 
@@ -156,16 +157,7 @@ router.post("/logout", async (req, res) => {
   res.sendStatus(200);
 });
 
-function restrict(req, res, next) {
-  if (req.session.accessToken) {
-    next();
-  } else {
-    req.session.error = "Access denied!";
-    res.sendStatus(401);
-  }
-}
-
-router.post("/restricted", restrict, async (req, res, next) => {
+router.post("/restricted", auth, async (req, res, next) => {
   res.sendStatus(200);
 });
 

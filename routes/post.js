@@ -1,7 +1,9 @@
 import express, { json } from "express";
 import prisma from "../prismaClient.js";
+import auth from "../middleware/auth.js";
 
 var router = express.Router();
+router.use(auth);
 
 //GET /post
 router.get("/", async (req, res) => {
@@ -17,11 +19,11 @@ router.get("/", async (req, res) => {
 
 //GET /post/followerPost
 router.get('/followerPost', async (req, res) => {
-    const { getUsersFollower } = req.body;
+    const { getUsersFollowerPost } = req.body;
     try {
         const posts = await prisma.post.findMany({
             where: {
-                userId: { in: getUsersFollower },
+                userId: { in: getUsersFollowerPost },
             },
             include: {
                 likedBy: true,

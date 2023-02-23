@@ -1,5 +1,6 @@
 import express, { json } from "express";
 import prisma from "../prismaClient.js";
+import auth from "../middleware/auth.js";
 
 var router = express.Router();
 
@@ -37,7 +38,7 @@ router.get("/:id", async (req, res) => {
 });
 
 //POST /prayer_alarm
-router.post("/", async (req, res, next) => {
+router.post("/", auth, async (req, res, next) => {
   try {
     const { prayerAlarm } = req.body;
     const alarm = await prisma.prayer_alarm.create({
@@ -53,7 +54,7 @@ router.post("/", async (req, res, next) => {
 });
 
 // PUT /prayer_alarm/:id
-router.put("/:id", async (req, res) => {
+router.put("/:id", auth, async (req, res) => {
   try {
     const prayerAlarmId = req.params.id;
     const prayerAlarm = req.body;
@@ -80,7 +81,7 @@ router.put("/:id", async (req, res) => {
 });
 
 //DELETE /prayer_alarm/:id
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", auth, async (req, res) => {
   try {
     const alarmId = req.params.id;
     const alarm = await prisma.prayer_alarm.delete({

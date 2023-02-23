@@ -1,7 +1,9 @@
 import express, { json } from "express";
 import prisma from "../prismaClient.js";
+import auth from "../middleware/auth.js";
 
 var router = express.Router();
+router.use(auth);
 
 // GET /roles
 router.get("/", async (req, res) => {
