@@ -2,24 +2,9 @@ import express, { json } from "express";
 import prisma from "../prismaClient.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import session from "express-session";
-import auth from "../middleware/auth.js";
+import { restrictUser } from "../middleware/auth.js";
 
 var router = express.Router();
-
-router.use(
-  session({
-    secret: "keyboardcat1527",
-    resave: false,
-    saveUninitialized: false,
-    resave: false,
-    cookie: {
-      maxAge: 1000 * 60 * 60 * 24,
-      secure: false,
-      httpOnly: false,
-    },
-  })
-);
 
 router.use(function (req, res, next) {
   var err = req.session.error;
@@ -157,7 +142,8 @@ router.post("/logout", async (req, res) => {
   res.sendStatus(200);
 });
 
-router.post("/restricted", auth, async (req, res, next) => {
+router.post("/restricted", restrictUser, async (req, res, next) => {
+  console.log(req.session.user.roleId);
   res.sendStatus(200);
 });
 

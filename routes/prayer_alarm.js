@@ -1,11 +1,11 @@
 import express, { json } from "express";
 import prisma from "../prismaClient.js";
-import auth from "../middleware/auth.js";
+import { restrictAdmin, restrictUser } from "../middleware/auth.js";
 
 var router = express.Router();
 
 //GET /prayer_alarm
-router.get("/", async (req, res) => {
+router.get("/", restrictUser, async (req, res) => {
   try {
     const prayer_alarm = await prisma.prayer_alarm.findMany();
     res.status(200).json(prayer_alarm);
@@ -16,7 +16,7 @@ router.get("/", async (req, res) => {
 });
 
 //GET /prayer_alarm/:id
-router.get("/:id", async (req, res) => {
+router.get("/:id", restrictUser, async (req, res) => {
   try {
     const alarmId = req.params.id;
 
@@ -38,7 +38,7 @@ router.get("/:id", async (req, res) => {
 });
 
 //POST /prayer_alarm
-router.post("/", auth, async (req, res, next) => {
+router.post("/", restrictAdmin, async (req, res, next) => {
   try {
     const { prayerAlarm } = req.body;
     const alarm = await prisma.prayer_alarm.create({
@@ -54,12 +54,12 @@ router.post("/", auth, async (req, res, next) => {
 });
 
 // PUT /prayer_alarm/:id
-router.put("/:id", auth, async (req, res) => {
+router.put("/:id", restrictAdmin, async (req, res) => {
   try {
     const prayerAlarmId = req.params.id;
-    const prayerAlarm = req.body;
+    const setPrayerAlarm = req.body.setPrayerAlarm;
 
-    console.log(prayerAlarm);
+    console.log(setPrayerAlarm);
 
     if (!Number.isInteger(Number(prayerAlarmId))) {
       return res.status(400).json({ msg: "The passed parameter has to be a number" });
@@ -70,7 +70,7 @@ router.put("/:id", auth, async (req, res) => {
         id: Number(prayerAlarmId),
       },
       data: {
-        prayerAlarm: prayerAlarm,
+        prayerAlarm: setPrayerAlarm
       },
     });
     res.status(200).json(alarm);
@@ -81,7 +81,7 @@ router.put("/:id", auth, async (req, res) => {
 });
 
 //DELETE /prayer_alarm/:id
-router.delete("/:id", auth, async (req, res) => {
+router.delete("/:id", restrictAdmin, async (req, res) => {
   try {
     const alarmId = req.params.id;
     const alarm = await prisma.prayer_alarm.delete({

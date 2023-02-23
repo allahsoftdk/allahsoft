@@ -1,12 +1,11 @@
 import express, { json } from "express";
 import prisma from "../prismaClient.js";
-import auth from "../middleware/auth.js";
+import { restrictAdmin, restrictUser } from "../middleware/auth.js";
 
 var router = express.Router();
-router.use(auth);
 
 // GET /roles
-router.get("/", async (req, res) => {
+router.get("/", restrictAdmin, async (req, res) => {
   try {
     const roles = await prisma.role.findMany();
     res.status(200).json(roles);
@@ -17,7 +16,7 @@ router.get("/", async (req, res) => {
 });
 
 // GET /roles/:id
-router.get("/:id", async (req, res) => {
+router.get("/:id", restrictAdmin, async (req, res) => {
   try {
     const roleId = req.params.id;
     const role = await prisma.role.findUnique({
@@ -33,7 +32,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // POST /roles
-router.post("/", async (req, res, next) => {
+router.post("/", restrictAdmin, async (req, res, next) => {
   try {
     const { role } = req.body;
     const newRole = await prisma.role.create({
@@ -49,7 +48,7 @@ router.post("/", async (req, res, next) => {
 });
 
 // PUT /roles/:id
-router.put("/:id", async (req, res) => {
+router.put("/:id", restrictAdmin, async (req, res) => {
   try {
     const roleId = req.params.id;
     const { name } = req.body;
@@ -69,7 +68,7 @@ router.put("/:id", async (req, res) => {
 });
 
 // DELETE /roles/:id
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", restrictAdmin, async (req, res) => {
   try {
     const roleId = req.params.id;
     const role = await prisma.role.delete({

@@ -1,12 +1,11 @@
 import express, { json } from "express";
 import prisma from "../prismaClient.js";
-import auth from "../middleware/auth.js";
+import { restrictAdmin, restrictUser } from "../middleware/auth.js";
 
 var router = express.Router();
-router.use(auth);
 
 //GET /post_comment
-router.get("/", async (req, res) => {
+router.get("/", restrictUser, async (req, res) => {
     try {
         const post_comment = await prisma.post_comment.findMany();
         res.status(200).json(post_comment);
@@ -18,7 +17,7 @@ router.get("/", async (req, res) => {
 
 
 //GET /post_comment/:id
-router.get('/:id', async (req, res) => {
+router.get('/:id', restrictUser, async (req, res) => {
     try {
         const post_comment = await prisma.post_comment.findMany({
             where: {
@@ -35,7 +34,7 @@ router.get('/:id', async (req, res) => {
 
 
 //POST /post_comment
-router.post("/", async (req, res, next) => {
+router.post("/", restrictUser, async (req, res, next) => {
     try {
         const { comment, postId, userId } = req.body;
         const post_comment = await prisma.post_comment.create({
@@ -53,7 +52,7 @@ router.post("/", async (req, res, next) => {
 });
 
 // PUT /post_comment/:id
-router.put("/:id", async (req, res) => {
+router.put("/:id", restrictUser, async (req, res) => {
     try {
         const commentId = req.params.id;
         const { comment } = req.body;
@@ -74,7 +73,7 @@ router.put("/:id", async (req, res) => {
 });
 
 //DELETE /post_comment/:id
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", restrictUser, async (req, res) => {
     try {
         const postId = req.params.id;
         const post = await prisma.post_comment.delete({
