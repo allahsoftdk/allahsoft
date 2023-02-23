@@ -4,22 +4,9 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import session from "express-session";
 import emailvalidator from "email-validator";
+import { restrictUser } from "../middleware/auth.js";
 
 var router = express.Router();
-
-router.use(
-  session({
-    secret: "keyboardcat1527",
-    resave: false,
-    saveUninitialized: false,
-    resave: false,
-    cookie: {
-      maxAge: 1000 * 60 * 60 * 24,
-      secure: false,
-      httpOnly: false,
-    },
-  })
-);
 
 router.use(function (req, res, next) {
   var err = req.session.error;
@@ -159,16 +146,8 @@ router.post("/logout", async (req, res) => {
   res.sendStatus(200);
 });
 
-function restrict(req, res, next) {
-  if (req.session.accessToken) {
-    next();
-  } else {
-    req.session.error = "Access denied!";
-    res.sendStatus(401);
-  }
-}
-
-router.post("/restricted", restrict, async (req, res, next) => {
+router.post("/restricted", restrictUser, async (req, res, next) => {
+  console.log(req.session.user.roleId);
   res.sendStatus(200);
 });
 

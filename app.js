@@ -8,6 +8,7 @@ import { fileURLToPath } from "url";
 import cors from "cors";
 import swaggerUi from "swagger-ui-express";
 import swaggerDoc from "./swagger.json" assert { type: "json" };
+import session from "express-session";
 dotenv.config();
 
 import userRouter from "./routes/user.js";
@@ -15,10 +16,25 @@ import roleRouter from "./routes/role.js";
 import prayer_alarm from "./routes/prayer_alarm.js";
 import setting from "./routes/setting.js";
 import chatRooms from "./routes/chatRoom.js";
+import post from "./routes/post.js";
+import post_comment from "./routes/post_comment.js";
 
 import authenticationRouter from "./routes/authentication.js";
 
 var app = express();
+
+app.use(session({
+  secret: "keyboardcat1527",
+  resave: false,
+  saveUninitialized: false,
+  resave: false,
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24,
+    secure: false,
+    httpOnly: false,
+  },
+}));
+
 app.use(cors({ credentials: true, origin: true }));
 
 // view engine setup
@@ -36,6 +52,8 @@ app.use("/api/role", roleRouter);
 app.use("/api/prayer_alarm", prayer_alarm);
 app.use("/api/setting", setting);
 app.use("/api/chatRoom", chatRooms);
+app.use("/api/post", post);
+app.use("/api/post_comment", post_comment);
 
 app.use("/api/auth", authenticationRouter);
 

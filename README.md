@@ -16,7 +16,7 @@ Run `docker ps` show all running docker containers status.
 # Prisma migrations
 run `npm run migrations` to run migrations in the dev database. Use when you have made changes to the prisma schema 
 run `npx prisma migrate reset` to reset the database. Deletes all the data and reseeds the database at the same time 
-run `npm run seed` seed the database. To changes or add to the seeder see /prisma/seed.js
+run `npm run seed` to seed the database. To add changes or add to the seeder see /prisma/seed.js
 
 # Authentication
 
