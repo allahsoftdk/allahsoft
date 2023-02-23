@@ -75,7 +75,7 @@ model Chat_message {
   chatRoomId Int
   user       User      @relation(fields: [userId], references: [id])
   userId     Int
-  createdAt  DateTime  @default(now()) @db.DateTime()
+  createdAt  DateTime  @default(now())
 
   @@id([chatRoomId, userId])
 }
