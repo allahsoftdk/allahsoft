@@ -3,6 +3,7 @@ import prisma from "../prismaClient.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import session from "express-session";
+import emailvalidator from "email-validator";
 
 var router = express.Router();
 
@@ -40,6 +41,8 @@ router.post("/register", async (req, res, next) => {
       return res.status(400).json({ msg: "Passwords do not match" });
     } else if (!name || !email || !password) {
       return res.status(400).json({ msg: "Please enter all fields" });
+    } else if (!emailvalidator.validate(email)) {
+      return res.status(400).json({ msg: "Please enter a valid email" });
     } else if (await prisma.user.findUnique({ where: { email: email } })) {
       return res.status(400).json({ msg: "Email already in use" });
     } else if (await prisma.user.findUnique({ where: { name: name } })) {
