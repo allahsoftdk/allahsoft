@@ -37,7 +37,7 @@ router.post("/", restrictUser, async (req, res, next) => {
     const { settingName, settingValue } = req.body;
     const setting = await prisma.setting.create({
       data: {
-        settingnName: settingName,
+        settingName: settingName,
         settingValue: settingValue,
       },
     });
