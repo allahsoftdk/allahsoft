@@ -27,68 +27,66 @@ router.get("/id/:id", restrictUser, async (req, res) => {
     console.log(err);
     return res.status(500).json({ error: err });
   }
-})
+});
 
-router.get('/followers/:id', restrictUser, async (req, res) => {
+router.get("/followers/:id", restrictUser, async (req, res) => {
   try {
     const followers = await prisma.user.findMany({
       where: {
-        id: Number(req.params.id)
+        id: Number(req.params.id),
       },
       include: {
-        following: true
-      }
-    })
+        following: true,
+      },
+    });
     res.status(200).json(followers);
-  }
-  catch (err) {
-    console.log(err);
-    return res.sendStatus(500);
-  }
-});
-
-router.post('/follow', restrictUser, async (req, res) => {
-  try {
-    const { userId, followId } = req.body;
-    const user = await prisma.user.update({
-      where: {
-        id: Number(userId),
-      },
-      data: {
-        following: {
-          connect: {
-            id: Number(followId),
-          },
-        },
-      },
-    })
-    return res.status(201).json(user);
-  }
-  catch (err) {
-    return res.status(500).json({ error: err });
-  }
-});
-
-//In the database "A" is unfollowUserId and currentUser is "B"
-router.put("/unfollow", restrictUser, async (req, res) => {
-  try {
-    const { currentUser, unfollowUserId } = req.body;
-    const result = await prisma.user.update({
-      where: {
-        id: Number(currentUser)
-      },
-      data: {
-        following: { disconnect: [{ id: Number(unfollowUserId) }] }
-      }
-    })
-    res.sendStatus(204);
   } catch (err) {
     console.log(err);
     return res.sendStatus(500);
   }
 });
 
+router.post("/follow/:id", restrictUser, async (req, res) => {
+  try {
+    const loggedInUserId = req.session.user.id;
+    const user = await prisma.user.update({
+      where: {
+        id: Number(loggedInUserId),
+      },
+      data: {
+        following: {
+          connect: {
+            id: Number(req.params.id),
+          },
+        },
+      },
+    });
+    return res.sendStatus(201);
+  } catch (err) {
+    return res.status(500).json({ error: err });
+  }
+});
 
-
+//In the database "A" is unfollowUserId and currentUser is "B"
+router.put("/unfollow/:id", restrictUser, async (req, res) => {
+  try {
+    const loggedInUserId = req.session.user.id;
+    const user = await prisma.user.update({
+      where: {
+        id: Number(loggedInUserId),
+      },
+      data: {
+        following: {
+          disconnect: {
+            id: Number(req.params.id),
+          },
+        },
+      },
+    });
+    return res.sendStatus(201);
+  } catch (err) {
+    return res.status(500).json({ error: err });
+  }
+});
 
 export default router;

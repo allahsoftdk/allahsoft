@@ -16,12 +16,24 @@ router.get("/", restrictUser, async (req, res) => {
 });
 
 //GET /post/followerPost
-router.get("/followerPost", restrictUser, async (req, res) => {
-  const { getUsersFollowerPost } = req.body;
+router.get("/following", restrictUser, async (req, res) => {
+  const loggedInUserId = req.session.user.id;
+
   try {
+    const following = await prisma.user.findUnique({
+      where: {
+        id: loggedInUserId,
+      },
+      include: {
+        following: true,
+      },
+    });
+
     const posts = await prisma.post.findMany({
       where: {
-        userId: { in: getUsersFollowerPost },
+        userId: {
+          in: following.following.map((user) => user.id),
+        },
       },
       include: {
         likedBy: true,
