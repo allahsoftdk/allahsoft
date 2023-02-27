@@ -67,13 +67,13 @@ router.post("/", restrictUser, async (req, res, next) => {
 
 //In the database "A" is postId and "B" is userId
 //POST post/like/
-router.post("/like", restrictUser, async (req, res, next) => {
+router.post("/like/:postId", restrictUser, async (req, res, next) => {
   try {
-    const { userId, postId } = req.body;
-    console.log(userId, postId);
+    const loggedInUserId = req.session.user.id;
+    const postId = req.params.postId;
     const user = await prisma.user.update({
       where: {
-        id: Number(userId),
+        id: Number(loggedInUserId),
       },
       data: {
         likes: {
@@ -83,7 +83,7 @@ router.post("/like", restrictUser, async (req, res, next) => {
         },
       },
     });
-    res.status(201).json(user);
+    res.sendStatus(204);
   } catch (err) {
     console.log(err);
     return res.sendStatus(500);
@@ -91,15 +91,20 @@ router.post("/like", restrictUser, async (req, res, next) => {
 });
 
 //In the database "A" is userId and "B" is PostId
-router.put("/unlike", restrictUser, async (req, res) => {
+router.put("/unlike/:postId", restrictUser, async (req, res) => {
   try {
-    const { postId, userId } = req.body;
-    const result = await prisma.user.update({
+    const loggedInUserId = req.session.user.id;
+    const postId = req.params.postId;
+    const user = await prisma.user.update({
       where: {
-        id: Number(postId),
+        id: Number(loggedInUserId),
       },
       data: {
-        likes: { disconnect: [{ id: Number(userId) }] },
+        likes: {
+          disconnect: {
+            id: Number(postId),
+          },
+        },
       },
     });
     res.sendStatus(204);
