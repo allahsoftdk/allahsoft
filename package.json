@@ -11,7 +11,8 @@
     "debug": "npm install && nodemon -r dotenv/config --legacy-watch -P 1000 ./bin/www.js",
     "test": "dotenv -e .env.test npx prisma migrate deploy && cross-env NODE_OPTIONS=--experimental-vm-modules dotenv -e .env.test jest --runInBand",
     "test:watch": "docker exec -it backend-dev sh -c \"dotenv -e .env.test npx prisma migrate deploy\" dotenv -e .env.test && cross-env NODE_OPTIONS=--experimental-vm-modules jest --watch --runInBand",
-    "migrations": "docker exec -it backend-dev sh -c \"dotenv -e .env npx prisma migrate dev\"",
+    "migrations:dev": "docker exec -it backend-dev sh -c \"dotenv -e .env npx prisma migrate dev\"",
+    "migrations:deploy": "docker exec -it backend-dev sh -c \"dotenv -e .env npx prisma migrate deploy\"",
     "seed": "docker exec -it backend-dev sh -c \"dotenv -e .env npx prisma db seed\"",
     "reset": "docker exec -it backend-dev sh -c \"dotenv -e .env npx prisma migrate reset\""
   },
