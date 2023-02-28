@@ -36,8 +36,25 @@ router.get("/following", restrictUser, async (req, res) => {
         },
       },
       include: {
-        likedBy: true,
-        postComments: true,
+        postComments: {
+          include: {
+            user: {
+              include: {
+                role: true,
+              },
+            },
+          },
+        },
+        likedBy: {
+          include: {
+            role: true,
+          },
+        },
+        user: {
+          include: {
+            role: true,
+          },
+        },
       },
     });
     res.status(200).json(posts);
