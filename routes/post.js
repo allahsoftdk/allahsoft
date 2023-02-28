@@ -67,11 +67,11 @@ router.get("/following", restrictUser, async (req, res) => {
 //POST /post
 router.post("/", restrictUser, async (req, res, next) => {
   try {
-    const { description, resources } = req.body;
+    const { description } = req.body;
     const post = await prisma.post.create({
       data: {
         description: description,
-        resources: resources,
+        resources: "",
         userId: req.session.user.id,
       },
     });
