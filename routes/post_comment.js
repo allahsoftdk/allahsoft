@@ -71,7 +71,7 @@ router.put("/:id", restrictUser, async (req, res) => {
     if (!comment) return res.status(400).json({ message: "Missing comment" });
     if (
       req.session.user.id !== commentUser.userId &&
-      req.session.user.role != "admin"
+      req.session.user.role.role != "admin"
     )
       return res
         .status(403)
@@ -83,6 +83,7 @@ router.put("/:id", restrictUser, async (req, res) => {
       },
       data: {
         comment: comment,
+        updatedAt: new Date(),
       },
     });
     res.status(200).json(commentUpdate);
@@ -105,7 +106,7 @@ router.delete("/:id", restrictUser, async (req, res) => {
 
     if (
       req.session.user.id !== commentUser.userId &&
-      req.session.user.role != "admin"
+      req.session.user.role.role != "admin"
     )
       return res
         .status(403)
