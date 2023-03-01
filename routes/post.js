@@ -15,6 +15,43 @@ router.get("/", restrictUser, async (req, res) => {
   }
 });
 
+//GET /post/user/:userId
+router.get("/user/:userId", restrictUser, async (req, res) => {
+  const userId = req.params.userId;
+  try {
+    const userPost = await prisma.post.findMany({
+      where: {
+        userId: Number(userId),
+      },
+      include: {
+        postComments: {
+          include: {
+            user: {
+              include: {
+                role: true,
+              },
+            },
+          },
+        },
+        likedBy: {
+          include: {
+            role: true,
+          },
+        },
+        user: {
+          include: {
+            role: true,
+          },
+        },
+      },
+    });
+    res.status(200).json(userPost);
+  } catch (err) {
+    console.log(err);
+    return res.sendStatus(500);
+  }
+});
+
 //GET /post/followerPost
 router.get("/following", restrictUser, async (req, res) => {
   const loggedInUserId = req.session.user.id;
@@ -28,6 +65,8 @@ router.get("/following", restrictUser, async (req, res) => {
         following: true,
       },
     });
+
+    following.following.push({ id: loggedInUserId });
 
     const posts = await prisma.post.findMany({
       where: {

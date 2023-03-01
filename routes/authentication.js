@@ -151,4 +151,18 @@ router.post("/restricted", restrictUser, async (req, res, next) => {
   res.sendStatus(200);
 });
 
+router.get("/loggedInUser", async (req, res, next) => {
+  const user = req.session.user;
+  if (!user) {
+    return res.status(400).json({ msg: "No user logged in" });
+  }
+
+  res.status(200).json({
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    roleId: user.roleId,
+  });
+});
+
 export default router;
