@@ -7,7 +7,48 @@ var router = express.Router();
 //GET /post
 router.get("/", restrictUser, async (req, res) => {
   try {
-    const userPost = await prisma.post.findMany();
+    const userPost = await prisma.post.findMany({
+      include: {
+        user: true
+      }
+    });
+    res.status(200).json(userPost);
+  } catch (err) {
+    console.log(err);
+    return res.sendStatus(500);
+  }
+});
+
+//GET /post/user/:userId
+router.get("/user/:userId", restrictUser, async (req, res) => {
+  const userId = req.params.userId;
+  try {
+    const userPost = await prisma.post.findMany({
+      where: {
+        userId: Number(userId),
+      },
+      include: {
+        postComments: {
+          include: {
+            user: {
+              include: {
+                role: true,
+              },
+            },
+          },
+        },
+        likedBy: {
+          include: {
+            role: true,
+          },
+        },
+        user: {
+          include: {
+            role: true,
+          },
+        },
+      },
+    });
     res.status(200).json(userPost);
   } catch (err) {
     console.log(err);
@@ -29,6 +70,8 @@ router.get("/following", restrictUser, async (req, res) => {
       },
     });
 
+    following.following.push({ id: loggedInUserId });
+
     const posts = await prisma.post.findMany({
       where: {
         userId: {
@@ -36,8 +79,25 @@ router.get("/following", restrictUser, async (req, res) => {
         },
       },
       include: {
-        likedBy: true,
-        postComments: true,
+        postComments: {
+          include: {
+            user: {
+              include: {
+                role: true,
+              },
+            },
+          },
+        },
+        likedBy: {
+          include: {
+            role: true,
+          },
+        },
+        user: {
+          include: {
+            role: true,
+          },
+        },
       },
     });
     res.status(200).json(posts);
@@ -50,11 +110,11 @@ router.get("/following", restrictUser, async (req, res) => {
 //POST /post
 router.post("/", restrictUser, async (req, res, next) => {
   try {
-    const { description, resources } = req.body;
+    const { description } = req.body;
     const post = await prisma.post.create({
       data: {
         description: description,
-        resources: resources,
+        resources: "",
         userId: req.session.user.id,
       },
     });
@@ -117,19 +177,55 @@ router.put("/unlike/:postId", restrictUser, async (req, res) => {
 // PUT /post/:id
 router.put("/:id", restrictUser, async (req, res) => {
   try {
+    const loggedInUserId = req.session.user.id;
     const postId = req.params.id;
-    const { description, resources, userId } = req.body;
+    const { description, userId } = req.body;
 
-    const post = await prisma.post.update({
+    const postUser = await prisma.post.findUnique({
       where: {
         id: Number(postId),
       },
-      data: {
-        description: description,
-        resources: resources,
-        userId: Number(userId),
+      select: {
+        userId: true,
       },
     });
+
+    if (!description) {
+      return res.status(400).json({ message: "Description is required" });
+    }
+    if (
+      postUser.userId !== loggedInUserId &&
+      req.session.user.role.role != "admin"
+    ) {
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to edit this post" });
+    }
+
+    let post;
+
+    if (!userId) {
+      post = await prisma.post.update({
+        where: {
+          id: Number(postId),
+        },
+        data: {
+          description: description,
+          updatedAt: new Date(),
+        },
+      });
+    } else {
+      post = await prisma.post.update({
+        where: {
+          id: Number(postId),
+        },
+        data: {
+          description: description,
+          userId: userId,
+          updatedAt: new Date(),
+        },
+      });
+    }
     res.status(200).json(post);
   } catch (err) {
     console.log(err);
@@ -140,14 +236,33 @@ router.put("/:id", restrictUser, async (req, res) => {
 //DELETE /post/:id
 router.delete("/:id", restrictUser, async (req, res) => {
   try {
-    const id = req.params.id;
-    console.log(id);
-    const post = await prisma.post.delete({
+    const loggedInUserId = req.session.user.id;
+    const postId = req.params.id;
+
+    const postUser = await prisma.post.findUnique({
       where: {
-        id: Number(id),
+        id: Number(postId),
+      },
+      select: {
+        userId: true,
       },
     });
-    res.sendStatus(204);
+
+    if (
+      postUser.userId !== loggedInUserId &&
+      req.session.user.role.role != "admin"
+    ) {
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to delete this post" });
+    }
+
+    const post = await prisma.post.delete({
+      where: {
+        id: Number(postId),
+      },
+    });
+    res.status(200).json(post);
   } catch (err) {
     console.log(err);
     return res.sendStatus(500);

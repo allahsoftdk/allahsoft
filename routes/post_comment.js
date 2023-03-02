@@ -7,7 +7,12 @@ var router = express.Router();
 //GET /post_comment
 router.get("/", restrictUser, async (req, res) => {
   try {
-    const post_comment = await prisma.post_comment.findMany();
+    const post_comment = await prisma.post_comment.findMany({
+      include: {
+        user: true,
+        post: true
+      }
+    });
     res.status(200).json(post_comment);
   } catch (err) {
     console.log(err);
@@ -36,6 +41,14 @@ router.post("/:postId", restrictUser, async (req, res, next) => {
     const loggedInUserId = req.session.user.id;
     const { comment } = req.body;
     const postId = req.params.postId;
+
+    // if postId does not exists return 404
+    const post = await prisma.post.findUnique({
+      where: {
+        id: Number(postId),
+      },
+    });
+    if (!post) return res.status(404).json({ message: "Post not found" });
 
     const post_comment = await prisma.post_comment.create({
       data: {
@@ -66,7 +79,7 @@ router.put("/:id", restrictUser, async (req, res) => {
     if (!comment) return res.status(400).json({ message: "Missing comment" });
     if (
       req.session.user.id !== commentUser.userId &&
-      req.session.user.role != "admin"
+      req.session.user.role.role != "admin"
     )
       return res
         .status(403)
@@ -78,6 +91,7 @@ router.put("/:id", restrictUser, async (req, res) => {
       },
       data: {
         comment: comment,
+        updatedAt: new Date(),
       },
     });
     res.status(200).json(commentUpdate);
@@ -100,7 +114,7 @@ router.delete("/:id", restrictUser, async (req, res) => {
 
     if (
       req.session.user.id !== commentUser.userId &&
-      req.session.user.role != "admin"
+      req.session.user.role.role != "admin"
     )
       return res
         .status(403)
