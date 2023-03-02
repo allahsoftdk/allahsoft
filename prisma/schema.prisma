@@ -90,3 +90,11 @@ model Role {
   role  String @unique @db.VarChar(255)
   users User[]
 }
+
+model IslamicEvent {
+  id        Int    @id @default(autoincrement())
+  name      String @unique @db.VarChar(255)
+  eventDate String @db.VarChar(255)
+  eventFrom String @db.VarChar(255)
+  eventTo   String @db.VarChar(255)
+}

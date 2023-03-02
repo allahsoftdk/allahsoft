@@ -6,7 +6,11 @@ var router = express.Router();
 
 router.get("/", restrictUser, async (req, res) => {
   try {
-    const users = await prisma.user.findMany();
+    const users = await prisma.user.findMany({
+      include: {
+        role: true,
+      }
+    });
     res.status(200).json(users);
   } catch (err) {
     console.log(err);
@@ -20,7 +24,9 @@ router.get("/id/:id", restrictUser, async (req, res) => {
     const user = await prisma.user.findUnique({
       where: {
         id: Number(userId),
-      },
+      }, include: {
+        role: true,
+      }
     });
     res.status(200).json(user);
   } catch (err) {
@@ -86,6 +92,23 @@ router.put("/unfollow/:id", restrictUser, async (req, res) => {
     return res.sendStatus(201);
   } catch (err) {
     return res.status(500).json({ error: err });
+  }
+});
+
+//DELETE /user/:id
+router.delete("/:id", restrictUser, async (req, res) => {
+  try {
+    const id = req.params.id;
+    console.log(id);
+    const post = await prisma.post.delete({
+      where: {
+        id: Number(id),
+      },
+    });
+    res.sendStatus(204);
+  } catch (err) {
+    console.log(err);
+    return res.sendStatus(500);
   }
 });
 

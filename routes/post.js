@@ -7,7 +7,11 @@ var router = express.Router();
 //GET /post
 router.get("/", restrictUser, async (req, res) => {
   try {
-    const userPost = await prisma.post.findMany();
+    const userPost = await prisma.post.findMany({
+      include: {
+        user: true
+      }
+    });
     res.status(200).json(userPost);
   } catch (err) {
     console.log(err);
