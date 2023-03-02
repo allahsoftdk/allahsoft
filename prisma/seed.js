@@ -4,6 +4,106 @@ import bcrypt from "bcryptjs";
 const password = "shitshit";
 
 async function main() {
+    const shab = await prisma.IslamicEvent.upsert({
+        where: { name: 'Shab e Meraj 2023' },
+        update: {},
+        create: {
+            name: 'Shab e Meraj 2023',
+            eventDate: 'Saturday, 18th of February 2023',
+            eventFrom: '18/02/23',
+            eventTo: '18/02/23'
+        },
+    })
+
+    const ramadan = await prisma.IslamicEvent.upsert({
+        where: { name: 'Ramadan 2023' },
+        update: {},
+        create: {
+            name: 'Ramadan 2023',
+            eventDate: 'Thursday, 23th of March 2023',
+            eventFrom: '23/03/23',
+            eventTo: '20/04/23'
+        },
+    })
+
+
+    const laylat = await prisma.IslamicEvent.upsert({
+        where: { name: 'Laylat al Qadr 2023' },
+        update: {},
+        create: {
+            name: 'Laylat al Qadr 2023',
+            eventDate: 'Tuesday, 18th of April 2023',
+            eventFrom: '18/04/23',
+            eventTo: '18/04/23'
+        },
+    })
+
+    const eid = await prisma.IslamicEvent.upsert({
+        where: { name: 'Eid ul Fitr 2023' },
+        update: {},
+        create: {
+            name: 'Eid ul Fitr 2023',
+            eventDate: 'Friday, 21th of April 2023',
+            eventFrom: '21/04/23',
+            eventTo: '22/04/23'
+        },
+    })
+
+    const hajj = await prisma.IslamicEvent.upsert({
+        where: { name: 'Hajj 2023' },
+        update: {},
+        create: {
+            name: 'Hajj 2023',
+            eventDate: 'Sunday, 25th of June 2023',
+            eventFrom: '25/06/23',
+            eventTo: '30/06/23'
+        },
+    })
+
+    const ediAl = await prisma.IslamicEvent.upsert({
+        where: { name: 'Eid al Adha 2023' },
+        update: {},
+        create: {
+            name: 'Eid al Adha 2023',
+            eventDate: 'Wednesday, 28th of June 2023',
+            eventFrom: '28/06/23',
+            eventTo: '28/06/23'
+        },
+    })
+
+    const muharram = await prisma.IslamicEvent.upsert({
+        where: { name: 'Muharram 2023' },
+        update: {},
+        create: {
+            name: 'Muharram 2023',
+            eventDate: 'Wednesday, 19th of July 2023',
+            eventFrom: '19/07/23',
+            eventTo: '19/07/23'
+        },
+    })
+
+    const ashura = await prisma.IslamicEvent.upsert({
+        where: { name: 'Ashura 2023' },
+        update: {},
+        create: {
+            name: 'Ashura 2023',
+            eventDate: 'Thursday, 28th of July 2023',
+            eventFrom: '28/07/23',
+            eventTo: '28/07/23'
+        },
+    })
+
+    const rabi = await prisma.IslamicEvent.upsert({
+        where: { name: '12 Rabi ul Awal 2023' },
+        update: {},
+        create: {
+            name: '12 Rabi ul Awal 2023',
+            eventDate: 'Thursday, 15th of September 2023',
+            eventFrom: '15/09/23',
+            eventTo: '27/09/23'
+        },
+    })
+
     const user = await prisma.role.upsert({
         where: { role: 'user' },
         update: {},
@@ -71,7 +171,7 @@ async function main() {
     });
 
 
-    console.log({ Victor, Kristoffer, Frederik, Isaac })
+    console.log("Shit got seeded, yay")
 }
 main()
     .then(async () => {

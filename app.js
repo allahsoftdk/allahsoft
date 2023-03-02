@@ -18,6 +18,7 @@ import setting from "./routes/setting.js";
 import chatRooms from "./routes/chatRoom.js";
 import post from "./routes/post.js";
 import post_comment from "./routes/post_comment.js";
+import event from "./routes/events.js";
 
 import authenticationRouter from "./routes/authentication.js";
 
@@ -54,6 +55,7 @@ app.use("/api/setting", setting);
 app.use("/api/chatRoom", chatRooms);
 app.use("/api/post", post);
 app.use("/api/post_comment", post_comment);
+app.use("/api/event", event);
 
 app.use("/api/auth", authenticationRouter);
 
