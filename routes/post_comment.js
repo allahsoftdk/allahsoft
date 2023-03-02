@@ -37,6 +37,14 @@ router.post("/:postId", restrictUser, async (req, res, next) => {
     const { comment } = req.body;
     const postId = req.params.postId;
 
+    // if postId does not exists return 404
+    const post = await prisma.post.findUnique({
+      where: {
+        id: Number(postId),
+      },
+    });
+    if (!post) return res.status(404).json({ message: "Post not found" });
+
     const post_comment = await prisma.post_comment.create({
       data: {
         comment: comment,
