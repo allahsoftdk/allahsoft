@@ -41,6 +41,11 @@ router.get("/:id", restrictUser, async (req, res) => {
 router.post("/", restrictAdmin, async (req, res, next) => {
   try {
     const { prayerAlarm } = req.body;
+
+    if(await prisma.prayer_alarm.findUnique({ where: { prayerAlarm: prayerAlarm } })){
+      return res.status(400).json({ msg: "Prayer alarm already exists" });
+    }
+
     const alarm = await prisma.prayer_alarm.create({
       data: {
         prayerAlarm: prayerAlarm,

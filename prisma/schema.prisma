@@ -32,7 +32,7 @@ model User {
 
 model Prayer_alarm {
   id          Int    @id @default(autoincrement())
-  prayerAlarm String @db.VarChar(255)
+  prayerAlarm String @unique @db.VarChar(255)
 }
 
 model Setting {
