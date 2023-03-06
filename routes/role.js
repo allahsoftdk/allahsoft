@@ -4,7 +4,7 @@ import { restrictAdmin, restrictUser } from "../middleware/auth.js";
 
 var router = express.Router();
 
-// GET /roles
+// GET /role
 router.get("/", restrictAdmin, async (req, res) => {
   try {
     const roles = await prisma.role.findMany();
@@ -15,7 +15,7 @@ router.get("/", restrictAdmin, async (req, res) => {
   }
 });
 
-// GET /roles/:id
+// GET /role/:id
 router.get("/:id", restrictAdmin, async (req, res) => {
   try {
     const roleId = req.params.id;
@@ -31,23 +31,28 @@ router.get("/:id", restrictAdmin, async (req, res) => {
   }
 });
 
-// POST /roles
+// POST /role
 router.post("/", restrictAdmin, async (req, res, next) => {
   try {
     const { role } = req.body;
+
+    if(await prisma.role.findUnique({ where: { role: role } })){
+      return res.status(400).json({ msg: "Role name already exists" });
+    }
+
     const newRole = await prisma.role.create({
       data: {
         role: role,
       },
     });
-    res.status(201).json(role);
+    res.status(201).json(newRole);
   } catch (err) {
     console.log(err);
     return res.sendStatus(500);
   }
 });
 
-// PUT /roles/:id
+// PUT /role/:id
 router.put("/:id", restrictAdmin, async (req, res) => {
   try {
     const roleId = req.params.id;
@@ -67,7 +72,7 @@ router.put("/:id", restrictAdmin, async (req, res) => {
   }
 });
 
-// DELETE /roles/:id
+// DELETE /role/:id
 router.delete("/:id", restrictAdmin, async (req, res) => {
   try {
     const roleId = req.params.id;

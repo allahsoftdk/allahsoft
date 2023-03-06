@@ -147,7 +147,6 @@ router.post("/logout", async (req, res) => {
 });
 
 router.post("/restricted", restrictUser, async (req, res, next) => {
-  console.log(req.session.user.roleId);
   res.sendStatus(200);
 });
 
