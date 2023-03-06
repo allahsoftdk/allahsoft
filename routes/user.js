@@ -52,6 +52,27 @@ router.get("/followers/:id", restrictUser, async (req, res) => {
   }
 });
 
+
+router.get("/followedBy/:id", restrictUser, async (req, res) => {
+  try {
+    const followers = await prisma.user.findMany({
+      where: {
+        id: Number(req.params.id),
+      },
+      include: {
+        followedBy: true,
+      },
+    });
+    res.status(200).json(followers);
+  } catch (err) {
+    console.log(err);
+    return res.sendStatus(500);
+  }
+});
+
+
+
+
 router.post("/follow/:id", restrictUser, async (req, res) => {
   try {
     const loggedInUserId = req.session.user.id;
