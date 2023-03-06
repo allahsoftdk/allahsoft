@@ -98,11 +98,10 @@ router.put("/unfollow/:id", restrictUser, async (req, res) => {
 //DELETE /user/:id
 router.delete("/:id", restrictUser, async (req, res) => {
   try {
-    const id = req.params.id;
-    console.log(id);
-    const post = await prisma.post.delete({
+    const userId = req.params.id;
+    const user = await prisma.user.delete({
       where: {
-        id: Number(id),
+        id: Number(userId),
       },
     });
     res.sendStatus(204);

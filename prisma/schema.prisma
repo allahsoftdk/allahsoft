@@ -32,7 +32,7 @@ model User {
 
 model Prayer_alarm {
   id          Int    @id @default(autoincrement())
-  prayerAlarm String @db.VarChar(255)
+  prayerAlarm String @unique @db.VarChar(255)
 }
 
 model Setting {
@@ -45,7 +45,7 @@ model Post {
   id           Int            @id @default(autoincrement())
   description  String         @db.TinyText()
   resources    String         @db.VarChar(255)
-  user         User           @relation(fields: [userId], references: [id])
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       Int
   postComments Post_comment[]
   likedBy      User[]         @relation("PostLike")
@@ -58,7 +58,7 @@ model Post_comment {
   comment   String    @db.TinyText()
   post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    Int       @db.Int
-  user      User      @relation(fields: [userId], references: [id])
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int       @db.Int
   createdAt DateTime? @default(now())
   updatedAt DateTime? @default(now())

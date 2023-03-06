@@ -35,6 +35,11 @@ router.get("/:id", restrictAdmin, async (req, res) => {
 router.post("/", restrictAdmin, async (req, res, next) => {
   try {
     const { role } = req.body;
+
+    if(await prisma.role.findUnique({ where: { role: role } })){
+      return res.status(400).json({ msg: "Role name already exists" });
+    }
+
     const newRole = await prisma.role.create({
       data: {
         role: role,

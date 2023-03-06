@@ -19,6 +19,11 @@ router.get("/", async (req, res) => {
 router.post("/", restrictAdmin, async (req, res, next) => {
     try {
         const { name, eventDate, eventFrom, eventTo } = req.body;
+
+        if(await prisma.IslamicEvent.findUnique({ where: { name: name } })){
+            return res.status(400).json({ msg: "Event name already exists" });
+          }
+
         const newEvent = await prisma.IslamicEvent.create({
             data: {
                 name: name,
@@ -34,6 +39,29 @@ router.post("/", restrictAdmin, async (req, res, next) => {
     }
 });
 
+
+// PUT /event/:id
+router.put("/:id", restrictAdmin, async (req, res) => {
+    try {
+      const eventId = req.params.id;
+      const { name, eventDate, eventFrom, eventTo } = req.body;
+      const updateEvent = await prisma.IslamicEvent.update({
+        where: {
+          id: Number(eventId),
+        },
+        data: {
+            name: name,
+            eventDate: eventDate,
+            eventFrom: eventFrom,
+            eventTo: eventTo
+        },
+      });
+      res.status(200).json(updateEvent);
+    } catch (err) {
+      console.log(err);
+      return res.sendStatus(500);
+    }
+  });
 
 // DELETE /event/:id
 router.delete("/:id", restrictAdmin, async (req, res) => {
