@@ -5,7 +5,7 @@ import { restrictAdmin, restrictUser } from "../middleware/auth.js";
 var router = express.Router();
 
 //GET /event
-router.get("/", restrictUser, async (req, res) => {
+router.get("/", async (req, res) => {
     try {
         const event = await prisma.IslamicEvent.findMany({});
         res.status(200).json(event);
