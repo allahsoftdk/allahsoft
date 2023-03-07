@@ -24,17 +24,19 @@ import authenticationRouter from "./routes/authentication.js";
 
 var app = express();
 
-app.use(session({
-  secret: "keyboardcat1527",
-  resave: false,
-  saveUninitialized: false,
-  resave: false,
-  cookie: {
-    maxAge: 1000 * 60 * 60 * 24,
-    secure: false,
-    httpOnly: false,
-  },
-}));
+app.use(
+  session({
+    secret: "keyboardcat1527",
+    resave: false,
+    saveUninitialized: false,
+    resave: false,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24,
+      secure: false,
+      httpOnly: false,
+    },
+  })
+);
 
 app.use(cors({ credentials: true, origin: true }));
 

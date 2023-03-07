@@ -8,6 +8,7 @@ import app from "../app.js";
 import debug from "debug";
 import http from "http";
 import { Server } from "socket.io";
+import socket from "../utils/socket.js";
 /**
  * Get port from environment and store in Express.
  */
@@ -27,6 +28,7 @@ export const io = new Server(server, {
 });
 // Add the socket IO server to the express app
 app.set("io", io);
+socket(io);
 
 /**
  * Listen on provided port, on all network interfaces.
