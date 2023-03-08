@@ -6,6 +6,7 @@ export default function (io) {
     console.log("a user connected");
 
     socket.on("findRoom", async (id) => {
+      socket.leaveAll();
       const room = await prisma.chat_room.findUnique({
         where: {
           id: Number(id),
@@ -15,6 +16,7 @@ export default function (io) {
           chatMessages: true,
         },
       });
+      socket.join(room.id);
       socket.emit("roomFound", room);
     });
 
@@ -26,7 +28,7 @@ export default function (io) {
           userId: message.user_id,
         },
       });
-      socket.emit("messageCreated", newMessage);
+      io.to(message.chat_room_id).emit("messageCreated", newMessage);
     });
   });
 }

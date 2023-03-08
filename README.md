@@ -22,8 +22,6 @@ run `npm run migrations:deploy` to run migrations deploy. Use when you're pullin
 run `npx prisma migrate reset` to reset the database. Deletes all the data and reseeds the database at the same time
 run `npm run seed` to seed the database. To add changes or add to the seeder see /prisma/seed.js
 
-# Authentication
-
 # Tests
 
 run `npm run test` to run tests
