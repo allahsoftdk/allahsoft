@@ -10,8 +10,8 @@ async function main() {
     create: {
       name: "Shab e Meraj",
       eventDate: "Saturday, 18th of February 2023",
-      eventFrom: "18/02/23",
-      eventTo: "18/02/23",
+      eventFrom: "02/18/23",
+      eventTo: "02/18/23",
     },
   });
 
@@ -21,8 +21,8 @@ async function main() {
     create: {
       name: "Ramadan",
       eventDate: "Thursday, 23th of March 2023",
-      eventFrom: "23/03/23",
-      eventTo: "20/04/23",
+      eventFrom: "03/23/23",
+      eventTo: "04/20/23",
     },
   });
 
@@ -32,8 +32,8 @@ async function main() {
     create: {
       name: "Laylat al Qadr",
       eventDate: "Tuesday, 18th of April 2023",
-      eventFrom: "18/04/23",
-      eventTo: "18/04/23",
+      eventFrom: "04/18/23",
+      eventTo: "04/18/23",
     },
   });
 
@@ -43,8 +43,8 @@ async function main() {
     create: {
       name: "Eid ul Fitr",
       eventDate: "Friday, 21th of April 2023",
-      eventFrom: "21/04/23",
-      eventTo: "22/04/23",
+      eventFrom: "04/21/23",
+      eventTo: "04/21/23",
     },
   });
 
@@ -54,8 +54,8 @@ async function main() {
     create: {
       name: "Hajj",
       eventDate: "Sunday, 25th of June 2023",
-      eventFrom: "25/06/23",
-      eventTo: "30/06/23",
+      eventFrom: "06/25/23",
+      eventTo: "06/30/23",
     },
   });
 
@@ -65,8 +65,8 @@ async function main() {
     create: {
       name: "Eid al Adha",
       eventDate: "Wednesday, 28th of June 2023",
-      eventFrom: "28/06/23",
-      eventTo: "28/06/23",
+      eventFrom: "06/28/23",
+      eventTo: "06/28/23",
     },
   });
 
@@ -76,8 +76,8 @@ async function main() {
     create: {
       name: "Muharram",
       eventDate: "Wednesday, 19th of July 2023",
-      eventFrom: "19/07/23",
-      eventTo: "19/07/23",
+      eventFrom: "07/19/23",
+      eventTo: "07/19/23",
     },
   });
 
@@ -87,8 +87,8 @@ async function main() {
     create: {
       name: "Ashura",
       eventDate: "Thursday, 28th of July 2023",
-      eventFrom: "28/07/23",
-      eventTo: "28/07/23",
+      eventFrom: "07/28/23",
+      eventTo: "07/28/23",
     },
   });
 
@@ -98,8 +98,8 @@ async function main() {
     create: {
       name: "12 Rabi ul Awal",
       eventDate: "Thursday, 15th of September 2023",
-      eventFrom: "15/09/23",
-      eventTo: "27/09/23",
+      eventFrom: "09/15/23",
+      eventTo: "09/27/23",
     },
   });
 
