@@ -9,10 +9,17 @@ router.get("/", restrictUser, async (req, res) => {
   try {
     const userPost = await prisma.post.findMany({
       include: {
-        user: true
-      }
+        user: true,
+        likedBy: true,
+      },
     });
-    res.status(200).json(userPost);
+
+    // get amount of likes for each post and add it to the post object
+    const posts = userPost.map((post) => {
+      const likes = post.likedBy.length;
+      return { ...post, likes };
+    });
+    res.status(200).json(posts);
   } catch (err) {
     console.log(err);
     return res.sendStatus(500);
@@ -49,7 +56,14 @@ router.get("/user/:userId", restrictUser, async (req, res) => {
         },
       },
     });
-    res.status(200).json(userPost);
+
+    // get amount of likes for each post and add it to the post object
+    const posts = userPost.map((post) => {
+      const likes = post.likedBy.length;
+      return { ...post, likes };
+    });
+
+    res.status(200).json(posts);
   } catch (err) {
     console.log(err);
     return res.sendStatus(500);
@@ -100,7 +114,14 @@ router.get("/following", restrictUser, async (req, res) => {
         },
       },
     });
-    res.status(200).json(posts);
+
+    // get amount of likes for each post and add it to the post object
+    const postsWithLikes = posts.map((post) => {
+      const likes = post.likedBy.length;
+      return { ...post, likes };
+    });
+
+    res.status(200).json(postsWithLikes);
   } catch (err) {
     console.log(err);
     return res.sendStatus(500);

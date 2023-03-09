@@ -74,15 +74,16 @@ model Chat_room {
 }
 
 model Chat_message {
+  id         Int       @id @default(autoincrement())
   message    String    @db.VarChar(255)
-  chatRoom   Chat_room @relation(fields: [chatRoomId], references: [id])
+  chatRoom   Chat_room @relation(fields: [chatRoomId], references: [id], onDelete: Cascade)
   chatRoomId Int
-  user       User      @relation(fields: [userId], references: [id])
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     Int
   createdAt  DateTime? @default(now())
   updatedAt  DateTime? @default(now())
 
-  @@id([chatRoomId, userId])
+  @@index([chatRoomId, userId])
 }
 
 model Role {
