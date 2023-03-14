@@ -27,6 +27,10 @@ router.get("/:id", restrictUser, async (req, res) => {
       where: {
         postId: Number(req.params.id),
       },
+      include: {
+        user: true,
+        post: true
+      }
     });
     res.status(200).json(post_comment);
   } catch (err) {
