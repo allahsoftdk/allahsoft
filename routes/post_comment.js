@@ -51,6 +51,9 @@ router.post("/:postId", restrictUser, async (req, res, next) => {
       where: {
         id: Number(postId),
       },
+      include: {
+        user: true,
+      },
     });
     if (!post) return res.status(404).json({ message: "Post not found" });
 
@@ -60,8 +63,12 @@ router.post("/:postId", restrictUser, async (req, res, next) => {
         postId: Number(postId),
         userId: Number(loggedInUserId),
       },
+      include: {
+        user: true,
+        post: true
+      }
     });
-    res.sendStatus(201);
+    res.status(201).json(post_comment);
   } catch (err) {
     console.log(err);
     return res.sendStatus(500);
